@@ -5,17 +5,6 @@ import 'firebase/compat/storage';
 import 'firebase/compat/database';
 
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBhxl3oeDpoMs3TKdJTF_o3bVYmqrTZzB0",
-//   authDomain: "soar-7e83e.firebaseapp.com",
-//   projectId: "soar-7e83e",
-//   storageBucket: "soar-7e83e.appspot.com",
-//   messagingSenderId: "818293176052",
-//   appId: "1:818293176052:web:029056a214a1ddf46c90a1",
-//   measurementId: "G-EM335ZTG7P",
-//   databaseURL: "https://soar-7e83e-default-rtdb.firebaseio.com"
-
-//   };
 
   const firebaseConfig = {
     apiKey: "AIzaSyBqkp1wzyidGp2Vu-rJOGH4WivWOQJSnEo",
