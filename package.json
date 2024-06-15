@@ -1,0 +1,22 @@
+{
+  "name": "horoscope",
+  "version": "1.0.0",
+  "description": "My splendiferous Nuxt.js project",
+  "author": "Arthittapoom",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "bootstrap-icons": "^1.11.3",
+    "bootstrap-vue": "^2.0.0",
+    "firebase": "^10.8.1",
+    "mdbvue": "^6.7.4",
+    "nuxt": "^2.0.0",
+    "pos": "^0.4.2"
+  }
+}
