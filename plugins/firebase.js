@@ -4,17 +4,15 @@ import 'firebase/compat/firestore';
 import 'firebase/compat/storage';
 import 'firebase/compat/database';
 
-
-
   const firebaseConfig = {
-    apiKey: "AIzaSyBqkp1wzyidGp2Vu-rJOGH4WivWOQJSnEo",
-    authDomain: "horoscope-47b18.firebaseapp.com",
-    projectId: "horoscope-47b18",
-    storageBucket: "horoscope-47b18.appspot.com",
-    messagingSenderId: "819080479013",
-    appId: "1:819080479013:web:e4178a6e5b1da8f1755acc",
-    measurementId: "G-JVSRDE1D99",
-    databaseURL: "https://horoscope-47b18-default-rtdb.firebaseio.com"
+    apiKey: "AIzaSyCtAnqquqD4oYzGAcqDXA-yNJDM_TdGecg",
+    authDomain: "carbon-e900f.firebaseapp.com",
+    projectId: "carbon-e900f",
+    storageBucket: "carbon-e900f.appspot.com",
+    messagingSenderId: "830495790488",
+    appId: "1:830495790488:web:84254cc62bc0026653c7ed",
+    measurementId: "G-T1BHZWSPXD",
+    databaseURL: "https://carbon-e900f-default-rtdb.firebaseio.com/"
   };
 
 // Check if the Firebase app is already initialized
