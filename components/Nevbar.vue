@@ -15,7 +15,8 @@
           <b-nav-item v-if="!uid" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <b-dropdown v-if="uid" right class="mr-5">
             <template #button-content>
-              <img class="icon-user" src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
+              <img class="icon-user"
+                src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
             </template>
             <b-dropdown-item disabled>{{ data.email }}</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import firebase from '~/plugins/firebase.js'
 export default {
   data() {
@@ -58,11 +60,23 @@ export default {
   methods: {
     logout() {
       // Clear user data and redirect to login page
-      localStorage.removeItem("uid");
-      localStorage.removeItem("userEmail");
-      this.uid = '';
-      this.userEmail = '';
-      this.$router.push('/');
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "ออกจากระบบสำเร็จ",
+        showConfirmButton: false,
+        timer: 1500
+      }).then(() => {
+        localStorage.removeItem("uid");
+        localStorage.removeItem("userEmail");
+        this.uid = '';
+        this.userEmail = '';
+        this.$router.push('/');
+      })
+
+
+
     },
 
     getdatauser(uid) {
@@ -105,20 +119,26 @@ export default {
     margin-left: 0px !important;
   }
 }
+
 .btn-secondary {
-    color: #fff;
-    background-color: #0088ff00;
-    border-color: #0088ff00;
+  color: #fff;
+  background-color: #0088ff00;
+  border-color: #0088ff00;
 }
-.btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active, .show > .btn-secondary.dropdown-toggle {
-    color: #fff;
-    background-color: #0088ff00;
-    border-color: #0088ff00;
+
+.btn-secondary:not(:disabled):not(.disabled):active,
+.btn-secondary:not(:disabled):not(.disabled).active,
+.show>.btn-secondary.dropdown-toggle {
+  color: #fff;
+  background-color: #0088ff00;
+  border-color: #0088ff00;
 }
-.btn-secondary:focus, .btn-secondary.focus {
-    color: #fff;
-    background-color: #0088ff00;
-    border-color: #0088ff00;
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0);
+
+.btn-secondary:focus,
+.btn-secondary.focus {
+  color: #fff;
+  background-color: #0088ff00;
+  border-color: #0088ff00;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0);
 }
 </style>

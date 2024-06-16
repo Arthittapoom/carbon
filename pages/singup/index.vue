@@ -6,7 +6,11 @@
         <input v-model="email" class="signup-input mb-3 pl-4" placeholder="อีเมล" type="email">
         <input v-model="password" class="signup-input mb-3 pl-4" placeholder="รหัสผ่าน" type="password">
         <input v-model="confirmPassword" class="signup-input mb-3 pl-4" placeholder="ยืนยันรหัสผ่าน" type="password">
-        <button @click="register" class="signup-btn mb-3">ยืนยัน</button>
+        <button v-if="!loading" @click="register" class="signup-btn mb-3">ยืนยัน</button>
+        <div v-if="loading" class="spinner-border text-warning" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+
         <div class="text-center">
           <p>หรือ</p>
           <button @click="signUpWithGoogle" class="signup-google-btn">
@@ -31,30 +35,49 @@
 
 <script>
 import firebase from '~/plugins/firebase.js'
+import Swal from 'sweetalert2'
 export default {
   data() {
     return {
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      loading: false
     }
   },
   methods: {
-    register() {
 
+    register() {
       if (this.password != this.confirmPassword) {
-        alert("รหัสผ่านไม่ตรงกัน");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "รหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน",
+          showConfirmButton: false,
+          timer: 1500
+        });
       } else {
+        this.loading = true;
+
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
-          const uid = user.user.uid
+          const uid = user.user.uid;
+
+          this.loading = false;
 
           this.set_data_to_user(uid);
 
+
         }).catch((error) => {
-          alert("มีบางอย่างผิดพลาด : " + error.message)
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง" + error,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.loading = false;
         });
       }
-
     },
     set_data_to_user(uid) {
       firebase.database().ref('users/' + uid).set({
@@ -62,15 +85,27 @@ export default {
         password: this.password,
         confirmPassword: this.confirmPassword,
       }).then(() => {
-        alert("สมัครสมาชิกเรียบร้อย")
-        localStorage.setItem('uid', uid)
-        this.$router.push('/')
-      })
-
+        localStorage.setItem('uid', uid);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "สมัครสมาชิกสำเร็จ",
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          this.$router.push('/')
+        });
+      });
     },
     signUpWithGoogle() {
       // Perform the Google signup process
-      alert("Google signup clicked");
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "กําลังพัฒนา",
+        showConfirmButton: false,
+        timer: 1500
+      });
     }
   }
 }
@@ -116,8 +151,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
-
 }
 
 .signup-container {
@@ -126,9 +159,7 @@ export default {
   align-items: center;
 }
 
-
 .signup-box {
-
   text-align: center;
   height: 450px;
   width: 400px;
@@ -138,12 +169,9 @@ export default {
   border: 5px solid #ffffff;
   padding: 20px;
   /* margin-right: 20px; */
-
-
 }
 
 .signup-box2 {
-
   height: 450px;
   width: 400px;
   background-color: #ffffff;
@@ -152,8 +180,6 @@ export default {
   border: 5px solid #ffffff;
   /* padding: 20px; */
   /* margin-right: 20px; */
-
-
 }
 
 .signup-image img {

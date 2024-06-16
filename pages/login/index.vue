@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 import firebase from '~/plugins/firebase.js'
 export default {
   data() {
@@ -42,22 +43,44 @@ export default {
   methods: {
     register() {
       if (!this.email || !this.password) {
-        alert('กรุณากรอกข้อมูลให้ครบ')
-      } else if (this.check == false) {
-        alert('กรุณาตรวจสอบการจำกัดความยาวของข้อมูล')
+
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "กรุณากรอกข้อมูลให้ครบ",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
       } else {
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
           .then((user) => {
 
             localStorage.setItem('uid', user.user.uid)
 
-            alert('เข้าสู่ระบบสำเร็จ')
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "เข้าสู่ระบบสำเร็จ",
+              showConfirmButton: false,
+              timer: 1500
+            }).then(() => {
+              this.getdatauser(user.user.uid)
+            })
 
-            this.getdatauser(user.user.uid)
+            
 
           })
           .catch((error) => {
-            alert("มีบางอย่างผิดพลาด : " + error.message)
+
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "มีบางอย่างผิดพลาด : " + error.message,
+              showConfirmButton: false,
+              timer: 1500
+            });
+            
           })
       }
     },
@@ -69,11 +92,19 @@ export default {
       // userRef.on('value', (snapshot) => {
       //   this.data = snapshot.val();
       // });
-      
+
     },
     signUpWithGoogle() {
       // Perform the Google signup process
-      alert("Google signup clicked");
+      
+      Swal.fire({
+          position: "center",
+          icon: "warning",
+          title: "กําลังพัฒนา",
+          showConfirmButton: false,
+          timer: 1500
+        });
+
     }
   }
 }
