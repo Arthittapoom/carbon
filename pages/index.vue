@@ -1,38 +1,34 @@
 <template>
     <div class="backgroundhome">
-        <Nevbar />
-        <Home />
+      <Nevbar />
+      <Home />
     </div>
-</template>
-
-<script>
-import Nevbar from '~/components/Nevbar.vue'
-import Home from '~/components/Home.vue'
-import firebase from '~/plugins/firebase.js'
-
-export default {
+  </template>
+  
+  <script>
+  import Nevbar from '~/components/Nevbar.vue'
+  import Home from '~/components/Home.vue'
+  
+  export default {
     components: {
-        Nevbar,
-        Home
+      Nevbar,
+      Home
     },
     data() {
-        return {
-
-        }
+      return {}
     },
-    mounted() {
-
-    },
-    methods: {
-
-    }
-}
-</script>
-
-<style>
-.backgroundhome {
+    mounted() {},
+    methods: {}
+  }
+  </script>
+  
+  <style>
+  .backgroundhome {
     background: linear-gradient(to bottom right, #0BC599 30%, #F1E92E 100%);
-    height: 100vh;
-    width: 100vw;
-}
-</style>
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  </style>
+  

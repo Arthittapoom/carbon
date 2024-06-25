@@ -18,7 +18,7 @@
               <img class="icon-user"
                 src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
             </template>
-            <b-dropdown-item disabled>{{ data.email }}</b-dropdown-item>
+            <b-dropdown-item disabled>{{ userEmail }}</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item @click="logout">ออกจากระบบ</b-dropdown-item>
           </b-dropdown>
@@ -46,7 +46,7 @@ export default {
     return {
       uid: '',
       userEmail: '',
-      data: [],
+      data: {},
     }
   },
   mounted() {
@@ -55,12 +55,13 @@ export default {
     this.uid = uid;
     this.userEmail = userEmail;
 
-    this.getdatauser(uid);
+    if (uid) {
+      this.getdatauser(uid);
+    }
   },
   methods: {
     logout() {
       // Clear user data and redirect to login page
-
       Swal.fire({
         position: "center",
         icon: "success",
@@ -74,19 +75,14 @@ export default {
         this.userEmail = '';
         this.$router.push('/');
       })
-
-
-
     },
 
     getdatauser(uid) {
       const userRef = firebase.database().ref('users/' + uid);
       userRef.on('value', (snapshot) => {
         this.data = snapshot.val();
-        //   console.log(this.data);
       });
     },
-
   }
 }
 </script>
