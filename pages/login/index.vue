@@ -14,7 +14,7 @@
               เข้าสู่ระบบ ด้วย Google
             </button>
             <div style="text-align: start;">
-              <p class="mt-3">ยังไม่มีบัญชี? <a href="/singup">สมัครสมาชิก</a></p>
+              <p class="mt-3">ยังไม่มีบัญชี? <nuxt-link to="/singup">สมัครสมาชิก</nuxt-link></p>
               <p>ลืมรหัสผ่าน? <a href="#">คริก</a></p>
             </div>
           </div>
