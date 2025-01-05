@@ -29,14 +29,14 @@
                 <div class="signup-box2">
                     <div v-if="tab == 1">
                         <div class="form-edit">
-                            <h1>ข้อมูลส่วนตัว</h1>
-                            <input v-model="FormData.firstname" type="text" placeholder="ชื่อจริง">
-                            <input v-model="FormData.lastname" type="text" placeholder="นามสกุล">
-                            <input v-model="FormData.phone" type="text" placeholder="เบอร์โทรศัพท์">
-                            <input v-model="FormData.birth" type="date" placeholder="วันเกิด">
-                            <input v-model="FormData.idcard" type="text" placeholder="เลขบัตรประชาชน">
-                            <p><input v-model="FormData.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
-                            <button @click="setData">บันทึกข้อมูล</button>
+                            <h1>ข้อมูลส่วนตัว <img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.firstname" type="text" placeholder="ชื่อจริง">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.lastname" type="text" placeholder="นามสกุล">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.phone" type="text" placeholder="เบอร์โทรศัพท์">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.birth" type="date" placeholder="วันเกิด">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.idcard" type="text" placeholder="เลขบัตรประชาชน">
+                            <p><input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit"  v-model="FormData.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
+                            <button v-if="edit" @click="setData">บันทึกข้อมูล</button>
                         </div>
                     </div>
                     <div v-if="tab == 2">
@@ -44,13 +44,13 @@
                     </div>
                     <div v-if="tab == 3">
                         <div class="form-edit">
-                            <h1>ข้อมูลบัญชี</h1>
-                            <input v-model="FormData2.bank" type="text" placeholder="ธนาคาร">
-                            <input v-model="FormData2.branch" type="text" placeholder="สาขา">
-                            <input v-model="FormData2.name" type="text" placeholder="ชื่อบัญชี">
-                            <input v-model="FormData2.number" type="text" placeholder="เลขบัญชี">
-                            <p><input v-model="FormData2.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
-                            <button @click="setData_bank">บันทึกข้อมูล</button>
+                            <h1>ข้อมูลบัญชี<img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.bank" type="text" placeholder="ธนาคาร">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.branch" type="text" placeholder="สาขา">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.name" type="text" placeholder="ชื่อบัญชี">
+                            <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.number" type="text" placeholder="เลขบัญชี">
+                            <p><input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
+                            <button v-if="edit" @click="setData_bank">บันทึกข้อมูล</button>
                         </div>
                     </div>
                     <div v-if="tab == 4">
@@ -73,6 +73,7 @@ export default {
     data() {
         return {
             tab: 1,
+            edit: false,
             user: null, // เก็บข้อมูลผู้ใช้ปัจจุบัน
             FormData: {
                 firstname: '',
@@ -536,6 +537,14 @@ export default {
     padding-bottom: 10px;
 }
 
+.form-edit h1 img {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 .form-edit button {
     width: 100%;
     height: 40px;
@@ -550,6 +559,21 @@ export default {
     transform: scale(1.05);
 }
 
+/* ลบเส้นกรอบเมื่อไม่ได้แก้ไข */
+.no-border {
+  border: none !important;
+  outline: none;
+  background-color: transparent; /* ทำให้พื้นหลังโปร่งใส */
+  cursor: default; /* เปลี่ยนเคอร์เซอร์เป็นค่าเริ่มต้น */
+}
+
+/* เพิ่มกรอบเมื่ออยู่ในโหมดแก้ไข */
+.editable {
+  border: 1px solid #ccc;
+  outline: none;
+  padding: 5px;
+  cursor: text;
+}
 
 @media (max-width: 768px) {
 

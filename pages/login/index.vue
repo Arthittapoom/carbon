@@ -83,10 +83,10 @@ export default {
       } catch (error) {
         // จัดการข้อผิดพลาดที่เกิดขึ้น
         let errorMessage = "";
-        if (error.code === 'auth/user-not-found') {
-          errorMessage += "ไม่พบบัญชีผู้ใช้นี้";
+        if (error.code === 'auth/invalid-credential') {
+          errorMessage += "ไม่พบบัญชีผู้ใช้นี้ หรือรหัสผ่านไม่ถูกต้อง";
         } else if (error.code === 'auth/invalid-credential') {
-          errorMessage += "รหัสผ่านไม่ถูกต้อง";
+          errorMessage += "รหัสผ่านไม่ถูกต้อง หรืออีเมลไม่ถูกต้อง";
         } else if (error.code === 'auth/invalid-email') {
           errorMessage += "รูปแบบอีเมลไม่ถูกต้อง";
         } else {
