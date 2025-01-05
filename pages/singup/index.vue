@@ -129,7 +129,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .text-1 {
   color: #0BC598;
   font-weight: bold;

@@ -20,6 +20,7 @@
             </template>
             <b-dropdown-item disabled>{{ userEmail }}</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item @click="profile">โปรไฟล์</b-dropdown-item>
             <b-dropdown-item @click="logout">ออกจากระบบ</b-dropdown-item>
           </b-dropdown>
         </b-navbar-nav>
@@ -75,11 +76,15 @@ export default {
       });
     },
 
+    profile() {
+      this.$router.push('/profile')
+    }
+
   }
 }
 </script>
 
-<style>
+<style scoped>
 .icon-user {
   width: 30px;
   height: 30px;

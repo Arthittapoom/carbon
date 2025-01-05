@@ -15,7 +15,7 @@
             </button>
             <div style="text-align: start;">
               <p class="mt-3">ยังไม่มีบัญชี? <nuxt-link to="/singup">สมัครสมาชิก</nuxt-link></p>
-              <p>ลืมรหัสผ่าน? <a class="forgot-password" @click="forgotPassword">คริก</a></p>
+              <p>ลืมรหัสผ่าน? <a class="forgot-password" @click="forgotPassword">คลิก</a></p>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 /* Base styles */
 .text-1 {
   color: #0BC598;

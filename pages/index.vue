@@ -22,7 +22,7 @@
   }
   </script>
   
-  <style>
+  <style scoped>
   .backgroundhome {
     background: linear-gradient(to bottom right, #0BC599 30%, #F1E92E 100%);
     min-height: 100vh;

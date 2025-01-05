@@ -23,8 +23,8 @@
 
                 <div class="row mt-3">
                     <div class="col-9">
-                        <p>จำนวนคาร์บอนที่มีจำหน่อย</p>
-                        <p>มูลค่าเฉลีย 198.15B</p>
+                        <p>จำนวนคาร์บอนที่มี</p>
+                        <p>มูลค่าเฉลี่ย 198.15B</p>
                     </div>
                     <div class="col-3">
                         <p>98.15C</p>
@@ -35,8 +35,8 @@
             <div class="signup-box2">
                 <p>คาร์บอนราคากลอง</p>
                 <div class="card-body">
-                    <p>จำนวนคาร์บอนที่มีจำหน่อย</p>
-                    <p>มูลค่าเฉลีย 198.15B</p>
+                    <p>จำนวนคาร์บอนที่มี</p>
+                    <p>มูลค่าเฉลี่ย 198.15B</p>
                 </div>
 
                 <input class="input-field mt-3 mb-3" type="text" placeholder="จำนวนคาร์บอน">
@@ -47,8 +47,8 @@
 
                 <div class="card-body">
                     คุณ อาทิตภูมิ ลงคาร์บอนในร้านค้า
-                    จำนวนคาร์บอนที่มีจำหน่อย 49.15C
-                    มูลค่าเฉลีย 198.15B
+                    จำนวนคาร์บอนที่มี 49.15C
+                    มูลค่าเฉลี่ย 198.15B
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .img1 {
     position: absolute;
     top: 0;
