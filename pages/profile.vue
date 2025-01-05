@@ -29,7 +29,7 @@
                 <div class="signup-box2">
                     <div v-if="tab == 1">
                         <div class="form-edit">
-                            <h1>ข้อมูลส่วนตัว <img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
+                            <h1>ข้อมูลส่วนตัว </h1>
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.firstname" type="text" placeholder="ชื่อจริง">
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.lastname" type="text" placeholder="นามสกุล">
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.phone" type="text" placeholder="เบอร์โทรศัพท์">
@@ -37,6 +37,7 @@
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData.idcard" type="text" placeholder="เลขบัตรประชาชน">
                             <p><input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit"  v-model="FormData.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
                             <button v-if="edit" @click="setData">บันทึกข้อมูล</button>
+                            <h1 v-if="!edit">แก้ไข <img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
                         </div>
                     </div>
                     <div v-if="tab == 2">
@@ -44,13 +45,14 @@
                     </div>
                     <div v-if="tab == 3">
                         <div class="form-edit">
-                            <h1>ข้อมูลบัญชี<img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
+                            <h1>ข้อมูลบัญชี</h1>
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.bank" type="text" placeholder="ธนาคาร">
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.branch" type="text" placeholder="สาขา">
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.name" type="text" placeholder="ชื่อบัญชี">
                             <input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.number" type="text" placeholder="เลขบัญชี">
                             <p><input :class="{'no-border': !edit, 'editable': edit}" :disabled="!edit" v-model="FormData2.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
                             <button v-if="edit" @click="setData_bank">บันทึกข้อมูล</button>
+                            <h1 v-if="!edit">แก้ไข <img @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
                         </div>
                     </div>
                     <div v-if="tab == 4">
@@ -200,6 +202,8 @@ export default {
                     timer: 1500
                 });
 
+                this.edit = false;
+
                 // อัปเดตข้อมูลต้นฉบับหลังจากบันทึกสำเร็จ
                 this.originalData = { ...this.FormData };
 
@@ -292,6 +296,9 @@ export default {
                     showConfirmButton: false,
                     timer: 1500
                 });
+
+                this.edit = false;
+
 
                 this.originalData2 = { ...this.FormData2 };
 
