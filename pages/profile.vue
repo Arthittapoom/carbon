@@ -6,11 +6,48 @@
 
             <div class="container signup-container">
                 <div class="signup-box">
-                    <p>คาร์บอนราคากลอง</p>
+                    <div class="menu">
+                        <div @click="tab = 1" class="submenu">
+                            <img src="../static/menu1.png" alt="">
+                            <p>ข้อมูลส่วนตัว</p>
+                        </div>
+                        <div @click="tab = 2" class="submenu">
+                            <img src="../static/menu2.png" alt="">
+                            <p>ข้อมูลคาร์บอน</p>
+                        </div>
+                        <div @click="tab = 3" class="submenu">
+                            <img src="../static/menu3.png" alt="">
+                            <p>ข้อมูลบัญชี</p>
+                        </div>
+                        <div @click="tab = 4" class="submenu">
+                            <img src="../static/menu4.png" alt="">
+                            <p>ประวัติการชื้อขาย</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="signup-box2">
-                    <p>คาร์บอนราคาในตลาด</p>
+                    <div v-if="tab == 1">
+                        <div class="form-edit">
+                            <h1>ข้อมูลส่วนตัว</h1>
+                            <input v-model="FormData.firstname" type="text" placeholder="ชื่อจริง">
+                            <input v-model="FormData.lastname" type="text" placeholder="นามสกุล">
+                            <input v-model="FormData.phone" type="text" placeholder="เบอร์โทรศัพท์">
+                            <input v-model="FormData.birth" type="date" placeholder="วันเกิด">
+                            <input v-model="FormData.idcard" type="text" placeholder="เลขบัตรประชาชน">
+                            <p><input v-model="FormData.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
+                            <button @click="setData">บันทึกข้อมูล</button>
+                        </div>
+                    </div>
+                    <div v-if="tab == 2">
+                        <p>ข้อมูลคาร์บอน</p>
+                    </div>
+                    <div v-if="tab == 3">
+                        <p>ข้อมูลบัญชี</p>
+                    </div>
+                    <div v-if="tab == 4">
+                        <p>ประวัติการชื้อขาย</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -24,19 +61,162 @@ import Swal from 'sweetalert2'
 
 export default {
     components: { Nevbar },
+
     data() {
         return {
-
-        }
+            tab: 1,
+            user: null, // เก็บข้อมูลผู้ใช้ปัจจุบัน
+            FormData: {
+                firstname: '',
+                lastname: '',
+                phone: '',
+                birth: '',
+                idcard: '',
+                agree: false
+            },
+            originalData: {} // เก็บข้อมูลต้นฉบับสำหรับเปรียบเทียบ
+        };
     },
+
     mounted() {
-
+        // ติดตามสถานะการล็อกอินแบบเรียลไทม์
+        firebase.auth().onAuthStateChanged(user => {
+            this.user = user;
+            if (user) {
+                this.getUserData(); // ดึงข้อมูลผู้ใช้เมื่อเข้าสู่ระบบ
+            } else {
+                console.log("User is logged out");
+            }
+        });
     },
-    methods: {
 
+    methods: {
+        validateForm() {
+            const { firstname, lastname, phone, birth, idcard, agree } = this.FormData;
+
+            if (!firstname || !lastname || !birth) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            if (!/^[0-9]{13}$/.test(idcard)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เลขบัตรประชาชนต้องเป็นตัวเลข 13 หลัก',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            if (!agree) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณายอมรับข้อตกลงก่อนบันทึกข้อมูล',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            return true;
+        },
+
+        async setData() {
+            if (!this.user) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณาเข้าสู่ระบบก่อน',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            // ตรวจสอบฟอร์มก่อนบันทึกข้อมูล
+            if (!this.validateForm()) {
+                return;
+            }
+
+            // ตรวจสอบว่าข้อมูลเปลี่ยนแปลงหรือไม่
+            if (JSON.stringify(this.FormData) === JSON.stringify(this.originalData)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ไม่มีการเปลี่ยนแปลงข้อมูล',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            try {
+                const uid = this.user.uid; // ดึง UID ของผู้ใช้
+                const payload = {
+                    ...this.FormData,
+                    uid: uid,
+                    updateAt: new Date().toISOString()
+                };
+
+                // บันทึกข้อมูล
+                await firebase.database().ref('users/' + uid).set(payload);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลสําเร็จ',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                // อัปเดตข้อมูลต้นฉบับหลังจากบันทึกสำเร็จ
+                this.originalData = { ...this.FormData };
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด: ' + error.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        },
+
+        async getUserData() {
+            try {
+                if (!this.user) return;
+
+                const uid = this.user.uid;
+                const snapshot = await firebase.database().ref('users/' + uid).once('value');
+                const data = snapshot.val();
+
+                if (data) {
+                    this.FormData = data; // กำหนดข้อมูลที่ดึงมา
+                    this.originalData = { ...data }; // เก็บข้อมูลต้นฉบับ
+                } else {
+                    console.log("No data available");
+                }
+
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้:", error.message);
+            }
+        }
     }
 }
 </script>
+
 
 <style scoped>
 .img1 {
@@ -66,11 +246,13 @@ export default {
     padding: 20px;
     margin-right: 20px;
 }
+
 .backgroundhome {
     background: linear-gradient(to bottom right, #0BC599 30%, #F1E92E 100%);
 }
+
 .signup-background {
-    
+
     width: 100%;
     height: 100vh;
     display: flex;
@@ -146,9 +328,97 @@ export default {
     margin-right: 10px;
 }
 
+.menu {
+    width: 100%;
+    height: 100%;
+    /* background-color: #00A1B4; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.submenu {
+    width: calc(50% - 10px);
+    background-color: white;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submenu:hover {
+    /* background-color: #00BBD4; */
+    transform: scale(1.05);
+}
+
+.submenu img {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.submenu p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2EBBF1;
+}
+
 .small-text {
     font-size: 10px;
 }
+
+.form-edit {
+    width: 100%;
+    height: 100%;
+    /* background-color: rgb(248, 108, 108); */
+}
+
+.form-edit input {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #909090;
+    background-color: #ffffff;
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.form-edit input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+
+.form-edit h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2EBBF1;
+    padding-bottom: 10px;
+}
+
+.form-edit button {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #00A1B4;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.form-edit button:hover {
+    transform: scale(1.05);
+}
+
 
 @media (max-width: 768px) {
 
