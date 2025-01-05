@@ -57,6 +57,7 @@
 
 <script>
 import firebase from '~/plugins/firebase.js'
+import Swal from 'sweetalert2';
 export default {
     data() {
         return {}

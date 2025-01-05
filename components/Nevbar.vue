@@ -12,8 +12,8 @@
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
           <b-nav-item id="show-btn" @click="$bvModal.show('bv-modal-example')" class="mr-5">แจ้งเตือน</b-nav-item>
-          <b-nav-item v-if="!uid" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
-          <b-dropdown v-if="uid" right class="mr-5">
+          <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
+          <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
               <img class="icon-user"
                 src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
@@ -44,45 +44,37 @@ import firebase from '~/plugins/firebase.js'
 export default {
   data() {
     return {
-      uid: '',
-      userEmail: '',
-      data: {},
+      islogin: false,
+      userEmail: ''
     }
   },
   mounted() {
-    const uid = localStorage.getItem("uid");
-    const userEmail = localStorage.getItem("userEmail"); // Assume the email is stored in localStorage
-    this.uid = uid;
-    this.userEmail = userEmail;
-
-    if (uid) {
-      this.getdatauser(uid);
-    }
+    this.Checkislogin()
   },
   methods: {
     logout() {
-      // Clear user data and redirect to login page
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "ออกจากระบบสำเร็จ",
-        showConfirmButton: false,
-        timer: 1500
-      }).then(() => {
-        localStorage.removeItem("uid");
-        localStorage.removeItem("userEmail");
-        this.uid = '';
-        this.userEmail = '';
-        this.$router.push('/');
+      firebase.auth().signOut().then(() => {
+        this.$router.push('/')
+        Swal.fire({
+          icon: 'success',
+          title: 'ออกจากระบบสําเร็จ',
+          showConfirmButton: false,
+          timer: 1500
+        })
       })
     },
 
-    getdatauser(uid) {
-      const userRef = firebase.database().ref('users/' + uid);
-      userRef.on('value', (snapshot) => {
-        this.data = snapshot.val();
+   Checkislogin() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.islogin = true;
+          this.userEmail = user.email;
+        } else {
+          this.islogin = false;
+        }
       });
     },
+
   }
 }
 </script>

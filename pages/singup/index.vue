@@ -4,10 +4,11 @@
       <transition name="fade">
         <div class="signup-box" v-if="show">
           <h2 class="text text-1">สมัครสมาชิก</h2>
-          <input v-model="email" class="signup-input mb-3 pl-4" placeholder="อีเมล" type="email">
-          <input v-model="password" class="signup-input mb-3 pl-4" placeholder="รหัสผ่าน" type="password">
-          <input v-model="confirmPassword" class="signup-input mb-3 pl-4" placeholder="ยืนยันรหัสผ่าน" type="password">
-          <button v-if="!loading" @click="register" class="signup-btn mb-3">ยืนยัน</button>
+          <input v-model="from_signup.email" class="signup-input mb-3 pl-4" placeholder="อีเมล" type="email">
+          <input v-model="from_signup.password" class="signup-input mb-3 pl-4" placeholder="รหัสผ่าน" type="password">
+          <input v-model="from_signup.confirmPassword" class="signup-input mb-3 pl-4" placeholder="ยืนยันรหัสผ่าน"
+            type="password">
+          <button v-if="!loading" @click="signup" class="signup-btn mb-3">ยืนยัน</button>
           <div v-if="loading" class="spinner-border text-warning" role="status">
             <span class="sr-only">Loading...</span>
           </div>
@@ -37,12 +38,16 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
-      email: '',
-      password: '',
-      confirmPassword: '',
       loading: false,
       show: false,
-      showImage: false
+      showImage: false,
+
+      // แก้ชื่อจาก from_singup เป็น from_signup
+      from_signup: {
+        email: '',
+        password: '',
+        confirmPassword: ''
+      }
     }
   },
   mounted() {
@@ -52,51 +57,64 @@ export default {
     loadNext() {
       this.showImage = true;
     },
-    register() {
-      if (this.password !== this.confirmPassword) {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "รหัสผ่านไม่ตรงกับยืนยันรหัสผ่าน",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      } else {
-        this.loading = true;
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
-          const uid = user.user.uid;
-          this.loading = false;
-          this.set_data_to_user(uid);
-        }).catch((error) => {
+    async signup() {
+      try {
+        // ตรวจสอบว่ากรอกข้อมูลครบถ้วน
+        if (!this.from_signup.email || !this.from_signup.password || !this.from_signup.confirmPassword) {
+          throw new Error("กรุณากรอกข้อมูลให้ครบถ้วน");
+        }
+
+        // ตรวจสอบรหัสผ่านและยืนยันรหัสผ่านตรงกันหรือไม่
+        if (this.from_signup.password !== this.from_signup.confirmPassword) {
+          throw new Error("รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน");
+        }
+
+        // ลงทะเบียนผู้ใช้ใหม่
+        const res = await firebase.auth().createUserWithEmailAndPassword(
+          this.from_signup.email,
+          this.from_signup.password
+        );
+
+        // ส่งอีเมลยืนยันตัวตน
+        if (res.user) {
+          await res.user.sendEmailVerification();
           Swal.fire({
             position: "center",
-            icon: "error",
-            title: "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง" + error,
+            icon: "success",
+            title: "อีเมลยืนยันตัวตนถูกส่งเรียบร้อย",
             showConfirmButton: false,
             timer: 1500
           });
-          this.loading = false;
-        });
-      }
-    },
-    set_data_to_user(uid) {
-      firebase.database().ref('users/' + uid).set({
-        email: this.email,
-        password: this.password,
-        confirmPassword: this.confirmPassword,
-      }).then(() => {
-        localStorage.setItem('uid', uid);
+          console.log("อีเมลยืนยันตัวตนถูกส่งเรียบร้อย");
+        }
+
+        console.log("ลงทะเบียนสำเร็จ", res);
+
+        this.$router.push('/');
+
+      } catch (error) {
+        let errorMessage = "เกิดข้อผิดพลาดในการลงทะเบียน: ";
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage += "อีเมลนี้ถูกใช้งานแล้ว";
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage += "รูปแบบอีเมลไม่ถูกต้อง";
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage += "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร";
+        } else {
+          errorMessage += error.message;
+        }
+
         Swal.fire({
           position: "center",
-          icon: "success",
-          title: "สมัครสมาชิกสำเร็จ",
+          icon: "error",
+          title: errorMessage,
           showConfirmButton: false,
           timer: 1500
-        }).then(() => {
-          this.$router.push('/')
         });
-      });
+        console.error("เกิดข้อผิดพลาดในการลงทะเบียน", error.message);
+      }
     },
+
     signUpWithGoogle() {
       Swal.fire({
         position: "center",
@@ -109,6 +127,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 .text-1 {
@@ -140,7 +159,8 @@ export default {
   align-items: center;
 }
 
-.signup-box, .signup-box2 {
+.signup-box,
+.signup-box2 {
   height: 450px;
   width: 400px;
   background-color: #ffffff;
@@ -166,7 +186,8 @@ export default {
   box-shadow: 0 0 10px rgba(11, 197, 152, 0.5);
 }
 
-.signup-btn, .signup-google-btn {
+.signup-btn,
+.signup-google-btn {
   width: 100%;
   height: 40px;
   border-radius: 30px;
@@ -195,14 +216,23 @@ export default {
   margin-right: 10px;
 }
 
-.signup-btn:hover, .signup-google-btn:hover {
+.signup-btn:hover,
+.signup-google-btn:hover {
   transform: scale(1.05);
 }
 
 @keyframes backgroundAnimation {
-  0% { background-position: 0 0; }
-  50% { background-position: 100% 100%; }
-  100% { background-position: 0 0; }
+  0% {
+    background-position: 0 0;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
 }
 
 .signin-background::before {
@@ -212,22 +242,28 @@ export default {
   left: 0;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 20%, transparent 20%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 20%, transparent 20%);
   background-size: 50px 50px;
   animation: backgroundAnimation 1000s linear infinite;
   z-index: 0;
   opacity: 0.8;
 }
 
-.signup-box, .signup-box2, .signup-image, .container {
+.signup-box,
+.signup-box2,
+.signup-image,
+.container {
   position: relative;
   z-index: 1;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to {
+
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

@@ -26,6 +26,7 @@
   .backgroundhome {
     background: linear-gradient(to bottom right, #0BC599 30%, #F1E92E 100%);
     min-height: 100vh;
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
