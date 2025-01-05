@@ -43,7 +43,15 @@
                         <p>ข้อมูลคาร์บอน</p>
                     </div>
                     <div v-if="tab == 3">
-                        <p>ข้อมูลบัญชี</p>
+                        <div class="form-edit">
+                            <h1>ข้อมูลบัญชี</h1>
+                            <input v-model="FormData2.bank" type="text" placeholder="ธนาคาร">
+                            <input v-model="FormData2.branch" type="text" placeholder="สาขา">
+                            <input v-model="FormData2.name" type="text" placeholder="ชื่อบัญชี">
+                            <input v-model="FormData2.number" type="text" placeholder="เลขบัญชี">
+                            <p><input v-model="FormData2.agree" type="checkbox"> ฉันยินยอมตามนโยบายและข้อกำหนด</p>
+                            <button @click="setData_bank">บันทึกข้อมูล</button>
+                        </div>
                     </div>
                     <div v-if="tab == 4">
                         <p>ประวัติการชื้อขาย</p>
@@ -74,7 +82,16 @@ export default {
                 idcard: '',
                 agree: false
             },
-            originalData: {} // เก็บข้อมูลต้นฉบับสำหรับเปรียบเทียบ
+
+            FormData2: {
+                bank: '',
+                branch: '',
+                name: '',
+                number: '',
+                agree: false
+            },
+            originalData: {}, // ข้อมูลต้นฉบับฟอร์มแรก
+            originalData2: {} // ข้อมูลต้นฉบับฟอร์มบัญชีธนาคาร
         };
     },
 
@@ -84,6 +101,7 @@ export default {
             this.user = user;
             if (user) {
                 this.getUserData(); // ดึงข้อมูลผู้ใช้เมื่อเข้าสู่ระบบ
+                this.getData_bank();
             } else {
                 console.log("User is logged out");
             }
@@ -191,6 +209,119 @@ export default {
                     showConfirmButton: false,
                     timer: 1500
                 });
+            }
+        },
+
+
+        // ตรวจสอบข้อมูลฟอร์มบัญชีธนาคาร
+        validateForm_bank() {
+            const { bank, branch, name, number, agree } = this.FormData2;
+
+            if (!bank || !branch || !name) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            if (!/^[0-9]{10}$/.test(number)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เลขบัญชีต้องเป็นตัวเลข 10 หลัก',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            if (!agree) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณายอมรับข้อตกลงก่อนบันทึกข้อมูล',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return false;
+            }
+
+            return true;
+        },
+
+        // บันทึกข้อมูลบัญชีธนาคาร
+        async setData_bank() {
+            if (!this.user) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'กรุณาเข้าสู่ระบบก่อน',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            if (!this.validateForm_bank()) {
+                return;
+            }
+
+            if (JSON.stringify(this.FormData2) === JSON.stringify(this.originalData2)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ไม่มีการเปลี่ยนแปลงข้อมูล',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+
+            try {
+                const uid = this.user.uid;
+                const payload = {
+                    ...this.FormData2,
+                    uid: uid,
+                    updateAt: new Date().toISOString()
+                };
+
+                await firebase.database().ref('users/' + uid + '/bank/').set(payload);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'บันทึกข้อมูลบัญชีธนาคารสำเร็จ',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+                this.originalData2 = { ...this.FormData2 };
+
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด: ' + error.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        },
+
+        // ดึงข้อมูลบัญชีธนาคาร
+        async getData_bank() {
+            try {
+                if (!this.user) return;
+
+                const uid = this.user.uid;
+                const snapshot = await firebase.database().ref('users/' + uid + '/bank/').once('value');
+                const data = snapshot.val();
+
+                if (data) {
+                    this.FormData2 = data;
+                    this.originalData2 = { ...data };
+                } else {
+                    console.log("No bank data available");
+                }
+
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการดึงข้อมูลบัญชีธนาคาร:", error.message);
             }
         },
 
