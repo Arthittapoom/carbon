@@ -6,7 +6,7 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item class="ml-5" href="/">หน้าแรก</b-nav-item>
-          <b-nav-item class="ml-5" href="#">จัดการร้าน</b-nav-item>
+          <b-nav-item class="ml-5" href="/manage">จัดการร้าน</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
