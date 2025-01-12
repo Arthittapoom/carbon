@@ -32,7 +32,7 @@
                 </div>
             </div>
             
-            <div class="signup-box2">
+            <div v-if="page === 1" class="signup-box2">
                 <p>คาร์บอนราคากลอง</p>
                 <div class="card-body">
                     <p>จำนวนคาร์บอนที่มี</p>
@@ -41,7 +41,7 @@
 
                 <input class="input-field mt-3 mb-3" type="text" placeholder="จำนวนคาร์บอน">
 
-                <button class="btn btn-primary">ชื้อ</button>
+                <button @click="page = 2" class="btn btn-primary">ชื้อ</button>
 
                 <p>คาร์บอนราคาในตลาด</p>
 
@@ -51,6 +51,38 @@
                     มูลค่าเฉลี่ย 198.15B
                 </div>
             </div>
+
+            <div v-if="page === 2" class="signup-box2">
+                <p>คาร์บอนราคากลอง</p>
+                <div class="card-body">
+                    <p>จำนวนคาร์บอนที่มี</p>
+                    <p>มูลค่าเฉลี่ย 198.15B</p>
+                </div>
+
+
+                <p>qr code</p>
+
+            
+                <button @click="page = 1" class="btn btn-primary">กลับ</button>
+                <button @click="page = 3" class="btn btn-primary">ชื้อ</button>
+
+            </div>
+
+            <div v-if="page === 3" class="signup-box2">
+                <p>คาร์บอนราคากลอง</p>
+                <div class="card-body">
+                    <p>จำนวนคาร์บอนที่มี</p>
+                    <p>มูลค่าเฉลี่ย 198.15B</p>
+                </div>
+
+                <p>ใบยืนยัน</p>
+
+            
+                <button @click="page = 1" class="btn btn-primary">กลับ</button>
+
+            </div>
+
+
         </div>
     </div>
 </template>
@@ -60,7 +92,9 @@ import firebase from '~/plugins/firebase.js'
 import Swal from 'sweetalert2';
 export default {
     data() {
-        return {}
+        return {
+            page: 1,
+        }
     },
     methods: {},
     mounted() {}
