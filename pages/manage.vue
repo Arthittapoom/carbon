@@ -592,6 +592,12 @@ export default {
     z-index: 1;
 }
 
+@media screen and (max-width: 768px) {
+    .img1 {
+        display: none;
+    }
+}
+
 .card-body {
     width: 100%;
     height: 100px;
