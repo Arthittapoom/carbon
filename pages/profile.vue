@@ -117,11 +117,12 @@
                         <div class="form-carbon">
                             <div>
                                 <!-- <pre>{{ treeData }}</pre> -->
-                                <p>จำนวนคาร์บอนที่มีจำหน่อย</p>
-                                <p>มูลค่าเฉลีย <span>0 บาท</span></p>
+                                <p>จำนวนคาร์บอนที่มี</p>
                             </div>
                             <p>{{ treeData.totalCarbon }}C</p>
                         </div>
+                        
+                        <p>กำหนดราคาขาย <input v-model="treeData.carbonPrice" class="input-price" type="number" name="" id=""> บาท</p>
 
                         <div class="form-carbon-sub">
                             <p>ค่าตอบแทนที่ได้รับ</p>
@@ -129,8 +130,9 @@
                         </div>
 
                         <div class="btn-corbon">
-                            <button @click="tab = 2">แก้ไขข้อมูลต้นไม้</button>
+                            <button @click="tab = 2">แก้ไขข้อมูล</button>
                             <button>ถอน</button>
+                            <button @click="saveCarbonPrice(treeData)">บันทึก</button>
                         </div>
 
                     </div>
@@ -226,6 +228,9 @@ export default {
 
 
             },
+
+
+            price_tree: 0,
 
             // ค่าคงที่สำหรับสมการ allometric ของต้นไม้แต่ละประเภท
             // a: แทนค่าจุดเริ่มต้นหรือความชันในสมการ (ต้นไม้เริ่มต้นสร้างมวลชีวภาพได้เร็วแค่ไหน)
@@ -359,6 +364,8 @@ export default {
                 });
             }
         },
+
+        
 
 
         // ตรวจสอบข้อมูลฟอร์มบัญชีธนาคาร
@@ -549,7 +556,10 @@ export default {
 
                 // console.log(data)
 
-                this.treeData = data || {
+                this.treeData = {
+                    ...data,
+                    uid: uid
+                } || {
                     area: 0,
                     trees: [
                         {
@@ -565,6 +575,22 @@ export default {
 
                 };
 
+            })
+        },
+
+        saveCarbonPrice(treeData){
+            console.log(treeData);
+            firebase.database().ref('trees/' + this.user.uid).update(
+                {
+                    ...treeData
+                }
+            )
+
+            Swal.fire({
+                icon: 'success',
+                title: 'บันทึกข้อมูลสําเร็จ',
+                showConfirmButton: false,
+                timer: 1500
             })
         },
 
@@ -624,6 +650,14 @@ export default {
 
 
 <style scoped>
+.input-price {
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #F2F2F2;
+}
+
 .form-carbon {
     display: flex;
     align-items: center;
@@ -652,7 +686,7 @@ export default {
 }
 
 .form-carbon-sub {
-    height: 250px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;

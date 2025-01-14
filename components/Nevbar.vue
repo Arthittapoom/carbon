@@ -6,12 +6,12 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item class="ml-5" href="/">หน้าแรก</b-nav-item>
-          <b-nav-item class="ml-5" href="/manage">จัดการร้าน</b-nav-item>
+          <b-nav-item v-if="role == 'admin'" class="ml-5" href="/manage">จัดการร้าน</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item id="show-btn" @click="$bvModal.show('bv-modal-example')" class="mr-5">แจ้งเตือน</b-nav-item>
+          <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')" class="mr-5">แจ้งเตือน</b-nav-item>
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
@@ -46,13 +46,21 @@ export default {
   data() {
     return {
       islogin: false,
-      userEmail: ''
+      userEmail: '',
+      role: '',
     }
   },
   mounted() {
     this.Checkislogin()
   },
   methods: {
+    getuser(uid) {
+      firebase.database().ref('users/' + uid).on('value', (snapshot) => {
+        const data = snapshot.val();
+        this.role = data.role
+        // console.log(data);
+      }) 
+    },
     logout() {
       firebase.auth().signOut().then(() => {
         this.$router.push('/')
@@ -70,6 +78,8 @@ export default {
         if (user) {
           this.islogin = true;
           this.userEmail = user.email;
+
+          this.getuser(user.uid)
         } else {
           this.islogin = false;
         }
