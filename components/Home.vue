@@ -1,6 +1,9 @@
 <template>
     <div class="signup-background">
-        <img class="img1" src="../static/home/image 5.svg" alt="">
+        <div class="logo">
+
+            <img class="img1" src="../static/home/image 5.svg" alt="">
+        </div>
 
         <div class="container signup-container">
             <div class="signup-box">
@@ -156,12 +159,15 @@ export default {
 </script>
 
 <style scoped>
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+}
 .img1 {
-    position: absolute;
-    top: 0;
-    width: 200px;
-    height: 200px;
-    z-index: 1;
+    
 }
 
 @media screen and (max-width: 768px) {
