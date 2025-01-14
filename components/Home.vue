@@ -31,25 +31,50 @@
                     </div>
                 </div>
             </div>
-            
+
             <div v-if="page === 1" class="signup-box2">
-                <p>คาร์บอนราคากลอง</p>
-                <div class="card-body">
-                    <p>จำนวนคาร์บอนที่มี</p>
-                    <p>มูลค่าเฉลี่ย 198.15B</p>
+                <p>คาร์บอน</p>
+
+                <div class="card">
+
+
+                    <div class="card-body2">
+                        <p>จำนวนคาร์บอน 0 C</p>
+                        <p>ราคา 0 บาท</p>
+                        <button>ชื้อ</button>
+                    </div>
+
+                    <div class="card-body2">
+                        <p>จำนวนคาร์บอน 0 C</p>
+                        <p>ราคา 0 บาท</p>
+                        <button>ชื้อ</button>
+                    </div>
+
+                    <div class="card-body2">
+                        <p>จำนวนคาร์บอน 0 C</p>
+                        <p>ราคา 0 บาท</p>
+                        <button>ชื้อ</button>
+                    </div>
+
+                    <div class="card-body2">
+                        <p>จำนวนคาร์บอน 0 C</p>
+                        <p>ราคา 0 บาท</p>
+                        <button>ชื้อ</button>
+                    </div>
+
+                    <div class="card-body2">
+                        <p>จำนวนคาร์บอน 0 C</p>
+                        <p>ราคา 0 บาท</p>
+                        <button>ชื้อ</button>
+                    </div>
+                    
+                    
+
                 </div>
 
-                <input class="input-field mt-3 mb-3" type="text" placeholder="จำนวนคาร์บอน">
 
-                <button @click="page = 2" class="btn btn-primary">ชื้อ</button>
 
-                <p>คาร์บอนราคาในตลาด</p>
 
-                <div class="card-body">
-                    คุณ อาทิตภูมิ ลงคาร์บอนในร้านค้า
-                    จำนวนคาร์บอนที่มี 49.15C
-                    มูลค่าเฉลี่ย 198.15B
-                </div>
             </div>
 
             <div v-if="page === 2" class="signup-box2">
@@ -62,7 +87,7 @@
 
                 <p>qr code</p>
 
-            
+
                 <button @click="page = 1" class="btn btn-primary">กลับ</button>
                 <button @click="page = 3" class="btn btn-primary">ชื้อ</button>
 
@@ -77,7 +102,7 @@
 
                 <p>ใบยืนยัน</p>
 
-            
+
                 <button @click="page = 1" class="btn btn-primary">กลับ</button>
 
             </div>
@@ -97,7 +122,7 @@ export default {
         }
     },
     methods: {},
-    mounted() {}
+    mounted() { }
 }
 </script>
 
@@ -110,14 +135,39 @@ export default {
     z-index: 1;
 }
 
-.card-body {
+@media screen and (max-width: 768px) {
+    .img1 {
+        display: none;
+    }
+
+}
+
+.card {
+    overflow-y: scroll;
+    height: 350px;
     width: 100%;
-    height: 100px;
-    background-color: #3FCFC8;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px 0px #909090;
+    border: none;
+}
+
+.card-body2{
+    background-color: #00A1B4;
+    color: #ffffff;
     padding: 20px;
-    margin-right: 20px;
+    border-radius: 15px;
+    display: flex;
+    font-size: large;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.card-body2>button{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    background-color: #c4f1f7;
+    color: #000000;
+    font-weight: bold;
 }
 
 .graph {
@@ -146,7 +196,8 @@ export default {
     flex-wrap: wrap;
 }
 
-.signup-box, .signup-box2 {
+.signup-box,
+.signup-box2 {
     height: 450px;
     width: 100%;
     max-width: 400px;
@@ -168,7 +219,8 @@ export default {
     border-radius: 10px;
 }
 
-.signup-input, .input-field {
+.signup-input,
+.input-field {
     width: 100%;
     height: 40px;
     border-radius: 5px;
@@ -177,7 +229,8 @@ export default {
     padding-left: 10px;
 }
 
-.signup-btn, .btn-primary {
+.signup-btn,
+.btn-primary {
     width: 100%;
     height: 40px;
     border-radius: 5px;
@@ -209,22 +262,12 @@ export default {
 }
 
 @media (max-width: 768px) {
-    .signup-box, .signup-box2 {
+
+    .signup-box,
+    .signup-box2 {
         width: 100%;
         max-width: 100%;
     }
 }
 
-@media (max-width: 576px) {
-    .signup-box, .signup-box2 {
-        height: auto;
-        padding: 10px;
-    }
-
-    .card-body, .graph {
-        height: auto;
-        padding: 10px;
-        margin-right: 0;
-    }
-}
 </style>

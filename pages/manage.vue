@@ -32,68 +32,19 @@
                         <div class="form-manage">
                             <h1>จัดการผู้ใช้ </h1>
                             <div class="form-manage2">
-                                <div class="list_item">
+
+                                <div v-for="item in userdatelist" class="list_item">
                                     <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
                                         alt="">
                                     <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
+                                        <h1>{{ item.firstname + ' ' + item.lastname }}</h1>
+                                        <p>{{ item.role === 'user' ?'ผู้ใช้':'ผู้ดูแลระบบ' }}</p>
                                     </div>
-                                    <button>แก้ไข</button>
+                                    <button @click="edituser(item)">แก้ไข</button>
                                 </div>
 
 
 
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
                             </div>
 
 
@@ -235,7 +186,10 @@ export default {
                 agree: false
             },
             originalData: {}, // ข้อมูลต้นฉบับฟอร์มแรก
-            originalData2: {} // ข้อมูลต้นฉบับฟอร์มบัญชีธนาคาร
+            originalData2: {}, // ข้อมูลต้นฉบับฟอร์มบัญชีธนาคาร
+
+
+            userdatelist: [],
         };
     },
 
@@ -246,6 +200,7 @@ export default {
             if (user) {
                 this.getUserData(); // ดึงข้อมูลผู้ใช้เมื่อเข้าสู่ระบบ
                 this.getData_bank();
+                this.getuser();
             } else {
                 console.log("User is logged out");
             }
@@ -253,6 +208,85 @@ export default {
     },
 
     methods: {
+        edituser(item) {
+            Swal.fire({
+                title: 'แก้ไขข้อมูลผู้ใช้',
+                html: `
+            <input id="swal-input1" class="swal2-input" placeholder="ชื่อ" value="${item.firstname}">
+            <input id="swal-input2" class="swal2-input" placeholder="นามสกุล" value="${item.lastname}">
+            <input id="swal-input3" class="swal2-input" placeholder="เบอร์โทรศัพท์" value="${item.phone}">
+            <input id="swal-input4" class="swal2-input" placeholder="วันเกิด" value="${item.birth}">
+            <input id="swal-input5" class="swal2-input" placeholder="เลขบัตรประชาชน" value="${item.idcard}">
+            <select id="swal-input6" class="swal2-input">
+                <option value="user" ${item.role === 'user' ? 'selected' : ''}>ผู้ใช้</option>
+                <option value="admin" ${item.role === 'admin' ? 'selected' : ''}>ผู้ดูแลระบบ</option>
+            </select>
+        `,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                showCancelButton: true,
+                focusConfirm: false,
+                preConfirm: () => {
+                    const firstname = document.getElementById('swal-input1').value;
+                    const lastname = document.getElementById('swal-input2').value;
+                    const phone = document.getElementById('swal-input3').value;
+                    const birth = document.getElementById('swal-input4').value;
+                    const idcard = document.getElementById('swal-input5').value;
+                    const role = document.getElementById('swal-input6').value;
+
+                    if (!firstname || !lastname || !phone || !birth || !idcard) {
+                        Swal.showValidationMessage(`กรุณากรอกข้อมูลให้ครบถ้วน`);
+                    }
+
+                    return { firstname, lastname, phone, birth, idcard, role };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const { firstname, lastname, phone, birth, idcard, role } = result.value;
+
+                    // อัปเดตข้อมูลใน Firebase
+                    firebase.database().ref('users/' + item.id).update({
+                        firstname,
+                        lastname,
+                        phone,
+                        birth,
+                        idcard,
+                        role
+                    }).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'แก้ไขข้อมูลผู้ใช้สําเร็จ',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    });
+                }
+            });
+        },
+
+
+        getuser() {
+            const userRef = firebase.database().ref('users');
+
+            userRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                const userList = [];
+
+                // เพิ่ม id เข้าไปในแต่ละรายการ
+                for (const [id, userData] of Object.entries(data || {})) {
+                    userList.push({ id, ...userData });
+                }
+
+                console.log(userList);
+
+                // อัปเดต `userdatelist` เพื่อใช้ในคอมโพเนนต์
+                this.userdatelist = userList;
+            }, (error) => {
+                console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+            });
+        },
+
+
 
         Export(e) {
             if (e == 1) {
