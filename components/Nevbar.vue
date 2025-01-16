@@ -5,8 +5,8 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <b-nav-item class="ml-5" href="/">หน้าแรก</b-nav-item>
-          <b-nav-item v-if="role == 'admin'" class="ml-5" href="/manage">จัดการร้าน</b-nav-item>
+          <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
+          <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage">จัดการร้าน</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -34,8 +34,13 @@
       </template>
       <div class="d-block text-center">
         <!-- <b-alert show variant="success">ระบบยังไม่มีการแจ้งเตือน</b-alert> -->
-        <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="item in noitify" show variant="success">
+        <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="item in noitify" show variant="warning">
           <p >{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
+        </b-alert>
+
+        <b-alert v-if="item.status === 'ตรวจสอบแล้ว'" v-for="item in noitify" show variant="success">
+          <p >{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
+          <button class="btn btn-success">โหลดเอกสาร</button>
         </b-alert>
         
       </div>
@@ -76,7 +81,7 @@ export default {
         
         this.noitify = [];
 
-        console.log(data);
+        // console.log(data);
 
         // แปลง data ให้เป็น Array เพื่อให้ใช้ forEach ได้
         if (data) {
@@ -87,7 +92,7 @@ export default {
           });
         }
 
-        console.log(this.noitify);
+        // console.log(this.noitify);
       });
     },
 

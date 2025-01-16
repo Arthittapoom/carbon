@@ -38,7 +38,7 @@
                                         alt="">
                                     <div>
                                         <h1>{{ item.firstname + ' ' + item.lastname }}</h1>
-                                        <p>{{ item.role === 'user' ?'ผู้ใช้':'ผู้ดูแลระบบ' }}</p>
+                                        <p>{{ item.role === 'user' ? 'ผู้ใช้' : 'ผู้ดูแลระบบ' }}</p>
                                     </div>
                                     <button @click="edituser(item)">แก้ไข</button>
                                 </div>
@@ -51,9 +51,25 @@
                         </div>
                     </div>
                     <div v-if="tab == 2">
-                        <div class="form-edit">
-                            <h1>จัดการคาร์บอน </h1>
+                        <div>
+                            <div class="form-manage">
+                                <h1>จัดการคาร์บอน </h1>
+                                <div class="form-manage2">
 
+
+                                    <div class="list_item">
+                                        <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
+                                            alt="">
+                                        <div>
+                                            <h1>อาทิตภูมิ หวานหอม</h1>
+                                            <p>ผู้ใช้</p>
+                                        </div>
+                                        <button>แก้ไข</button>
+                                    </div>
+
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div v-if="tab == 3">
@@ -83,76 +99,34 @@
                         <div class="form-manage">
                             <h1>จัดการค่าตอบแทน </h1>
                             <div class="form-manage2">
-                                <div class="list_item">
+
+
+
+                                <div v-for="item in buyCorbon" class="list_item">
                                     <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
                                         alt="">
                                     <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
+                                        <h1>{{ item.firstname + ' ' + item.lastname }}</h1>
+                                        <p>{{ item.status }}</p>
+                                        <p>{{ item.tree.carbonPrice }} บาท</p>
+                                        <p>{{ item.tree.totalCarbon }} C</p>
                                     </div>
-                                    <button>แก้ไข</button>
+                                    <button v-if="item.status === 'รอการตรวจสอบ'" @click="check(item)">ตรวจ</button>
+                                    <button v-if="item.status === 'ตรวจสอบแล้ว'" style="background-color: aliceblue; color: #000;">สำเร็จ</button>
                                 </div>
 
 
 
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
-
-                                <div class="list_item">
-                                    <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
-                                        alt="">
-                                    <div>
-                                        <h1>อาทิตภูมิ หวานหอม</h1>
-                                        <p>ผู้ใช้</p>
-                                    </div>
-                                    <button>แก้ไข</button>
-                                </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
+
     </div>
 </template>
 
@@ -166,7 +140,7 @@ export default {
 
     data() {
         return {
-            tab: 1,
+            tab: 4,
             edit: false,
             user: null, // เก็บข้อมูลผู้ใช้ปัจจุบัน
             FormData: {
@@ -190,6 +164,8 @@ export default {
 
 
             userdatelist: [],
+
+            buyCorbon: [],
         };
     },
 
@@ -201,6 +177,7 @@ export default {
                 this.getUserData(); // ดึงข้อมูลผู้ใช้เมื่อเข้าสู่ระบบ
                 this.getData_bank();
                 this.getuser();
+                this.getbuyCorbon();
             } else {
                 console.log("User is logged out");
             }
@@ -208,6 +185,105 @@ export default {
     },
 
     methods: {
+
+        check(item) {
+            if (!item || !item.id || !item.imgurl) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ข้อมูลไม่ถูกต้อง',
+                    text: 'ไม่สามารถตรวจสอบข้อมูลได้',
+                });
+                return;
+            }
+
+            Swal.fire({
+                imageUrl: item.imgurl,
+                imageWidth: 300,
+                imageAlt: 'Custom image',
+                confirmButtonText: 'ตรวจสอบ',
+                showCancelButton: true,
+                cancelButtonText: 'ยกเลิก',
+                focusConfirm: false,
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        // อัปเดตสถานะใน Firebase
+                        await firebase.database().ref('buyCorbon/' + item.id).update({
+                            status: 'ตรวจสอบแล้ว',
+                        });
+
+                        // แสดงผลลัพธ์เมื่ออัปเดตสำเร็จ
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'ตรวจสอบแล้ว',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    } catch (error) {
+                        // แสดงข้อผิดพลาด
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถอัปเดตสถานะได้: ' + error.message,
+                        });
+                    }
+                } else if (result.isDismissed) {
+                    // กรณีกดปุ่มยกเลิก
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยกเลิก',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }
+            });
+        },
+
+
+        async getbuyCorbon() {
+            try {
+                const snapshot = await firebase.database().ref('buyCorbon').once('value');
+                const data = snapshot.val();
+
+                // เอา id เข้า data
+                for (const [key, value] of Object.entries(data)) {
+                    data[key].id = key;
+                }
+
+
+                if (data) {
+                    // แปลงข้อมูลจาก Object เป็น Array
+                    this.buyCorbon = Object.values(data);
+
+                    // ดึงข้อมูลผู้ใช้เพิ่มเติมโดยใช้ Promise.all
+                    const promises = this.buyCorbon.map(async (item) => {
+                        const userSnapshot = await firebase.database().ref(`users/${item.uid}`).once('value');
+                        const userData = userSnapshot.val();
+
+                        // รวมข้อมูลของ buyCorbon และ user
+                        return {
+                            ...item,
+                            firstname: userData?.firstname || '',
+                            lastname: userData?.lastname || '',
+                            phone: userData?.phone || '',
+                            birth: userData?.birth || '',
+                            idcard: userData?.idcard || '',
+                        };
+                    });
+
+                    // รอให้ข้อมูลผู้ใช้ทั้งหมดถูกโหลด
+                    this.buyCorbon = await Promise.all(promises);
+
+                    // console.log(this.buyCorbon); // แสดงข้อมูลที่อัปเดตแล้ว
+                } else {
+                    console.log("No data found in 'buyCorbon'.");
+                }
+            } catch (error) {
+                console.error("Error fetching buyCorbon or user data:", error);
+            }
+        },
+
+
         edituser(item) {
             Swal.fire({
                 title: 'แก้ไขข้อมูลผู้ใช้',
@@ -277,7 +353,7 @@ export default {
                     userList.push({ id, ...userData });
                 }
 
-                console.log(userList);
+                // console.log(userList);
 
                 // อัปเดต `userdatelist` เพื่อใช้ในคอมโพเนนต์
                 this.userdatelist = userList;
