@@ -534,7 +534,8 @@ export default {
             firebase.database().ref('trees/' + this.user.uid).set(
                 {
                     ...this.treeData,
-                    totalCarbon: result.totalCO2
+                    totalCarbon: result.totalCO2,
+                    status: "รอการตรวจสอบ"
                 }
             );
 
@@ -582,7 +583,9 @@ export default {
             console.log(treeData);
             firebase.database().ref('trees/' + this.user.uid).update(
                 {
-                    ...treeData
+                    ...treeData,
+                    status: "รอการตรวจสอบ"
+
                 }
             )
 

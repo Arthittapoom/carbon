@@ -57,14 +57,13 @@
                                 <div class="form-manage2">
 
 
-                                    <div class="list_item">
+                                    <div v-for="item in treeslist" class="list_item">
                                         <img src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png"
                                             alt="">
                                         <div>
-                                            <h1>อาทิตภูมิ หวานหอม</h1>
-                                            <p>ผู้ใช้</p>
+                                            <h1>{{ item.firstname }} {{ item.lastname }}</h1>
                                         </div>
-                                        <button>แก้ไข</button>
+                                        <button>ตรวจ</button>
                                     </div>
 
 
@@ -112,7 +111,8 @@
                                         <p>{{ item.tree.totalCarbon }} C</p>
                                     </div>
                                     <button v-if="item.status === 'รอการตรวจสอบ'" @click="check(item)">ตรวจ</button>
-                                    <button v-if="item.status === 'ตรวจสอบแล้ว'" style="background-color: aliceblue; color: #000;">สำเร็จ</button>
+                                    <button v-if="item.status === 'ตรวจสอบแล้ว'"
+                                        style="background-color: aliceblue; color: #000;">สำเร็จ</button>
                                 </div>
 
 
@@ -140,7 +140,7 @@ export default {
 
     data() {
         return {
-            tab: 4,
+            tab: 2,
             edit: false,
             user: null, // เก็บข้อมูลผู้ใช้ปัจจุบัน
             FormData: {
@@ -165,6 +165,8 @@ export default {
 
             userdatelist: [],
 
+            treeslist: [],
+
             buyCorbon: [],
         };
     },
@@ -178,6 +180,7 @@ export default {
                 this.getData_bank();
                 this.getuser();
                 this.getbuyCorbon();
+                this.gettrees();
             } else {
                 console.log("User is logged out");
             }
@@ -185,6 +188,50 @@ export default {
     },
 
     methods: {
+        gettrees() {
+            firebase.database().ref('trees').on('value', (snapshot) => {
+                const data = snapshot.val();
+
+                if (!data) {
+                    console.log("No data found in 'trees'.");
+                    this.treeslist = [];
+                    return;
+                }
+
+                // แปลงข้อมูลเป็นอาร์เรย์และเพิ่มรายละเอียดผู้ใช้
+                this.treeslist = Object.entries(data).map(([id, tree]) => ({
+                    id,
+                    ...tree,
+                }));
+
+                // ดึงข้อมูลผู้ใช้เพิ่มเติมตาม uid
+                this.treeslist.forEach((tree) => {
+                    if (tree.uid) {
+                        firebase.database().ref(`users/${tree.uid}`).once('value', (userSnapshot) => {
+                            const userData = userSnapshot.val();
+
+                            // เพิ่มข้อมูลผู้ใช้เข้าในต้นไม้แต่ละรายการ
+                            this.treeslist = this.treeslist.map((item) => {
+                                if (item.uid === tree.uid) {
+                                    return {
+                                        ...item,
+                                        firstname: userData?.firstname || "Unknown",
+                                        lastname: userData?.lastname || "Unknown",
+                                        phone: userData?.phone || "Unknown",
+                                    };
+                                }
+                                return item;
+                            });
+
+                            // console.log("Updated trees list with user data:", this.treeslist);
+                        });
+                    }
+                });
+
+                console.log("Initial trees list:", this.treeslist);
+            });
+        },
+
 
         check(item) {
             if (!item || !item.id || !item.imgurl) {
@@ -239,7 +286,6 @@ export default {
             });
         },
 
-
         async getbuyCorbon() {
             try {
                 const snapshot = await firebase.database().ref('buyCorbon').once('value');
@@ -282,7 +328,6 @@ export default {
                 console.error("Error fetching buyCorbon or user data:", error);
             }
         },
-
 
         edituser(item) {
             Swal.fire({
@@ -340,7 +385,6 @@ export default {
             });
         },
 
-
         getuser() {
             const userRef = firebase.database().ref('users');
 
@@ -361,8 +405,6 @@ export default {
                 console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
             });
         },
-
-
 
         Export(e) {
             if (e == 1) {
@@ -483,7 +525,6 @@ export default {
                 });
             }
         },
-
 
         // ตรวจสอบข้อมูลฟอร์มบัญชีธนาคาร
         validateForm_bank() {
