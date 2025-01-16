@@ -79,14 +79,15 @@
                 </div>
 
                 <div class="qr">
-                    <img class="img2" src="/QRcode2.png" alt="">
+                    <img v-if="imgurl" class="img2" :src="imgurl" alt="Uploaded Image">
+                    <img v-else class="img2" src="/QRcode2.png" alt="Default Image">
                 </div>
 
-                <button @click="page = 3" class="btn btn-primary mb-1">อัพสลิป</button>
+                <input type="file" @change="onFileChange" />
 
                 <div class="btn-corbon">
                     <button @click="page = 1" class="btn btn-primary">กลับ</button>
-                    <button @click="page = 3" class="btn btn-primary">ชื้อ</button>
+                    <button @click="buyCorbon()" class="btn btn-primary">ชื้อ</button>
                 </div>
 
             </div>
@@ -108,12 +109,14 @@
 <script>
 import firebase from '~/plugins/firebase.js'
 import Swal from 'sweetalert2';
+import { uid } from 'chart.js/helpers';
 export default {
     data() {
         return {
             page: 1,
             treeData: {},
             selectedTree: null,
+            imgurl: null,
 
             data_graph: [
                 { date: '1', value: 30 },
@@ -127,6 +130,66 @@ export default {
         }
     },
     methods: {
+
+        buyCorbon() {
+            console.log(this.selectedTree);
+            console.log(this.imgurl);
+
+            const playload = {
+                tree: this.selectedTree,
+                imgurl: this.imgurl,
+                uid: firebase.auth().currentUser.uid,
+                status: "รอการตรวจสอบ"
+            }
+
+            // บันทึกข้อมูล
+           const ref = firebase.database().ref('buyCorbon').push(playload);
+
+           ref.then((snapshot) => {
+               
+               // แจ้งเตือน
+               Swal.fire({
+                   icon: 'success',
+                   title: 'บันทึกข้อมูลสําเร็จ',
+                   showConfirmButton: false,
+                   timer: 2000
+               })
+
+           })
+
+           ref.catch((error) => {
+               console.error(error);
+           })
+        },
+
+        onFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // สร้าง FormData สำหรับส่งข้อมูล
+                const formData = new FormData();
+                formData.append("image", file);
+
+                const apiKey = "0904e409f47dfdaabe1f414e276a4cd8"; // แทนที่ด้วย API Key ของคุณจาก ImgBB
+
+                // ส่งคำขอไปยัง ImgBB API
+                fetch("https://api.imgbb.com/1/upload?key=" + apiKey, {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log("Uploaded Image URL:", data.data.display_url);
+                            this.imgurl = data.data.display_url; // เก็บ URL ของภาพในตัวแปร form
+                        } else {
+                            console.error("Upload failed:", data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error uploading image:", error);
+                    });
+            }
+        },
 
         fetch_trees() {
             const res = firebase.database().ref('trees');
@@ -159,16 +222,14 @@ export default {
 </script>
 
 <style scoped>
-
 .logo {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50%;
 }
-.img1 {
-    
-}
+
+.img1 {}
 
 @media screen and (max-width: 768px) {
     .img1 {

@@ -11,7 +11,8 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')" class="mr-5">แจ้งเตือน</b-nav-item>
+          <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')"
+            class="mr-5">แจ้งเตือน</b-nav-item>
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
@@ -32,7 +33,11 @@
         แจ้งเตือน
       </template>
       <div class="d-block text-center">
-        <b-alert show variant="success">ระบบยังไม่มีการแจ้งเตือน</b-alert>
+        <!-- <b-alert show variant="success">ระบบยังไม่มีการแจ้งเตือน</b-alert> -->
+        <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="item in noitify" show variant="success">
+          <p >{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
+        </b-alert>
+        
       </div>
       <b-button class="mt-3 btn-danger" block @click="$bvModal.hide('bv-modal-example')">ปิด</b-button>
     </b-modal>
@@ -48,18 +53,51 @@ export default {
       islogin: false,
       userEmail: '',
       role: '',
+      noitify: null
     }
   },
   mounted() {
     this.Checkislogin()
+
   },
   methods: {
+
+    getbuyCorbon(uid) {
+      // ตรวจสอบว่า `this.noitify` ถูกตั้งค่าเริ่มต้นหรือไม่
+      if (!this.noitify) {
+        this.noitify = [];
+      }
+
+      // ลบข้อมูลใน `this.noitify` ทิ้ง
+      
+
+      firebase.database().ref('buyCorbon').on('value', (snapshot) => {
+        const data = snapshot.val();
+        
+        this.noitify = [];
+
+        console.log(data);
+
+        // แปลง data ให้เป็น Array เพื่อให้ใช้ forEach ได้
+        if (data) {
+          Object.values(data).forEach((element) => {
+            if (element.uid == uid) {
+              this.noitify.push(element);
+            }
+          });
+        }
+
+        console.log(this.noitify);
+      });
+    },
+
+
     getuser(uid) {
       firebase.database().ref('users/' + uid).on('value', (snapshot) => {
         const data = snapshot.val();
         this.role = data.role
         // console.log(data);
-      }) 
+      })
     },
     logout() {
       firebase.auth().signOut().then(() => {
@@ -73,12 +111,12 @@ export default {
       })
     },
 
-   Checkislogin() {
+    Checkislogin() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.islogin = true;
           this.userEmail = user.email;
-
+          this.getbuyCorbon(user.uid)
           this.getuser(user.uid)
         } else {
           this.islogin = false;
