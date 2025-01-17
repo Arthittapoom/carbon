@@ -110,7 +110,7 @@
                                     </table>
                                 </div>
 
-                                <div class="trees-info">
+                                <div class="carbon-info">
                                     <h2>ข้อมูลต้นไม้</h2>
                                     <table>
                                         <thead>
@@ -213,7 +213,7 @@ export default {
 
     data() {
         return {
-            tab: 2,
+            tab: 1,
             edit: false,
             user: null, // เก็บข้อมูลผู้ใช้ปัจจุบัน
             FormData: {
@@ -747,6 +747,31 @@ export default {
 
 
 <style scoped>
+
+.action_manage_carbon {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding: 5px;
+    gap: 10px;
+}
+
+.action_manage_carbon button {
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #00A1B4;
+    color: #fff;
+    font-weight: bold;
+}
+
+.carbon-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
 .form-manage {}
 
 .form-manage2 {
