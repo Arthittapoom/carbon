@@ -63,7 +63,7 @@
                                         <div>
                                             <h1>{{ item.firstname }} {{ item.lastname }}</h1>
                                         </div>
-                                        <button>ตรวจ</button>
+                                        <button @click="manage_carbon(item)">ตรวจ</button>
                                     </div>
 
 
@@ -71,6 +71,79 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="tab == 22">
+                        <div class="form-manage">
+                            <h1>รายละเอียดคาร์บอน</h1>
+
+                            <div class="form-manage2">
+                                <div class="carbon-info">
+                                    <h2>ข้อมูลผู้ใช้</h2>
+                                    <table>
+                                        <tr>
+                                            <th>ชื่อ</th>
+                                            <td>{{ select_corbon.firstname }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>นามสกุล</th>
+                                            <td>{{ select_corbon.lastname }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>เบอร์โทร</th>
+                                            <td>{{ select_corbon.phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>พื้นที่</th>
+                                            <td>{{ select_corbon.area }} ตร.ม.</td>
+                                        </tr>
+                                        <tr>
+                                            <th>ราคาคาร์บอน</th>
+                                            <td>{{ select_corbon.carbonPrice }} บาท</td>
+                                        </tr>
+                                        <tr>
+                                            <th>สถานะ</th>
+                                            <td>{{ select_corbon.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>รวมคาร์บอน</th>
+                                            <td>{{ select_corbon.totalCarbon }} kg</td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="trees-info">
+                                    <h2>ข้อมูลต้นไม้</h2>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>ชนิด</th>
+                                                <th>จำนวน</th>
+                                                <th>ความสูง (cm)</th>
+                                                <th>ความกว้าง (cm)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(tree, index) in select_corbon.trees" :key="index">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ tree.type }}</td>
+                                                <td>{{ tree.count }}</td>
+                                                <td>{{ tree.height }}</td>
+                                                <td>{{ tree.width }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="action_manage_carbon">
+                                    <button @click="tab = 2">กลับ</button>
+                                    <button>โหลดข้อมูล</button>
+                                    <input type="file">
+                                    <button>ยืนยันข้อมูล</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-if="tab == 3">
                         <div class="form-edit">
                             <h1>สรุปรายงาน</h1>
@@ -168,6 +241,8 @@ export default {
             treeslist: [],
 
             buyCorbon: [],
+
+            select_corbon: null,
         };
     },
 
@@ -188,6 +263,12 @@ export default {
     },
 
     methods: {
+        manage_carbon(item) {
+            this.select_corbon = item
+            this.tab = 22
+            //    console.log(this.select_corbon);
+        },
+
         gettrees() {
             firebase.database().ref('trees').on('value', (snapshot) => {
                 const data = snapshot.val();
