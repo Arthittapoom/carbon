@@ -136,7 +136,7 @@
 
                                 <div class="action_manage_carbon">
                                     <button @click="tab = 2">กลับ</button>
-                                    <button>โหลดข้อมูล</button>
+                                    <button @click="download(select_corbon)">โหลดข้อมูล</button>
                                     <input type="file">
                                     <button>ยืนยันข้อมูล</button>
                                 </div>
@@ -150,7 +150,7 @@
                             <div class="menu">
                                 <div @click="Export(1)" class="submenu">
                                     <img src="../static/menu4.png" alt="">
-                                    <p>เอกสารรายชื้อ</p>
+                                    <p>เอกสารรายชื่อ</p>
                                 </div>
                                 <div @click="Export(2)" class="submenu">
                                     <img src="../static/menu4.png" alt="">
@@ -204,6 +204,7 @@
 </template>
 
 <script>
+import * as XLSX from "xlsx";
 import Nevbar from '~/components/Nevbar.vue'
 import firebase from '~/plugins/firebase.js'
 import Swal from 'sweetalert2'
@@ -263,6 +264,39 @@ export default {
     },
 
     methods: {
+
+        download(data) {
+
+            // แปลงข้อมูล `trees` ให้เป็นรายการที่พร้อมใช้งานใน Excel
+            const flattenedData = data.trees.map((tree, index) => ({
+                ID: data.id,
+                AcceptPolicy: data.acceptPolicy,
+                Area: data.area,
+                CarbonPrice: data.carbonPrice,
+                Status: data.status,
+                TotalCarbon: data.totalCarbon,
+                FirstName: data.firstname,
+                LastName: data.lastname,
+                Phone: data.phone,
+                TreeIndex: index + 1, // หมายเลขของต้นไม้
+                TreeCount: tree.count,
+                TreeHeight: tree.height,
+                TreeType: tree.type,
+                TreeWidth: tree.width,
+            }));
+
+            // สร้าง worksheet
+            const ws = XLSX.utils.json_to_sheet(flattenedData);
+
+            // สร้าง workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+
+            // เขียนไฟล์ Excel
+            XLSX.writeFile(wb, "data.xlsx");
+
+        },
+
         manage_carbon(item) {
             this.select_corbon = item
             this.tab = 22
@@ -489,16 +523,103 @@ export default {
 
         Export(e) {
             if (e == 1) {
-                alert("เอกสารรายชื้อ");
+                // ดึงข้อมูลจาก Firebase
+                firebase.database().ref("users").once("value").then((snapshot) => {
+                    const data = snapshot.val();
+
+                    // แปลงข้อมูลจาก object เป็น array
+                    const formattedData = Object.keys(data).map((key) => ({
+                        UID: key,
+                        Agree: data[key].agree,
+                        Birth: data[key].birth,
+                        Firstname: data[key].firstname,
+                        Lastname: data[key].lastname,
+                        IDCard: data[key].idcard,
+                        Phone: data[key].phone,
+                        Role: data[key].role,
+                        UpdateAt: data[key].updateAt,
+                    }));
+
+                    console.log("Formatted Data:", formattedData);
+
+                    // สร้างไฟล์ Excel
+                    const workbook = XLSX.utils.book_new();
+                    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+                    // ดาวน์โหลดไฟล์ Excel
+                    XLSX.writeFile(workbook, "users.xlsx");
+                });
             }
             if (e == 2) {
                 alert("เอกสารการชื้อขาย");
             }
             if (e == 3) {
-                alert("เอกสารบัญชี");
+                // ดึงข้อมูล "trees"
+                firebase.database().ref("trees").once("value").then((snapshot) => {
+                    const data = snapshot.val();
+
+                    // แปลงข้อมูลจาก object เป็น array พร้อมขยายรายการ `trees`
+                    const formattedData = [];
+                    Object.keys(data).forEach((key) => {
+                        const user = data[key];
+                        user.trees.forEach((tree, index) => {
+                            formattedData.push({
+                                UID: key,
+                                AcceptPolicy: user.acceptPolicy,
+                                Area: user.area,
+                                CarbonPrice: user.carbonPrice,
+                                Status: user.status,
+                                TotalCarbon: user.totalCarbon,
+                                TreeIndex: index + 1,
+                                TreeCount: tree.count,
+                                TreeHeight: tree.height,
+                                TreeType: tree.type,
+                                TreeWidth: tree.width,
+                            });
+                        });
+                    });
+
+                    console.log("Formatted Tree Data:", formattedData);
+
+                    // สร้างไฟล์ Excel
+                    const workbook = XLSX.utils.book_new();
+                    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Trees");
+
+                    // ดาวน์โหลดไฟล์ Excel
+                    XLSX.writeFile(workbook, "trees.xlsx");
+                });
             }
             if (e == 4) {
-                alert("เอกสารต้นไม้");
+                // ดึงข้อมูล "users"
+                firebase.database().ref("users").once("value").then((snapshot) => {
+                    const data = snapshot.val();
+
+                    // แปลงข้อมูลเพื่อเอาเฉพาะฟิลด์ bank
+                    const formattedData = Object.keys(data).map((key) => {
+                        const bank = data[key]?.bank || {}; // ตรวจสอบว่ามีข้อมูล bank หรือไม่
+                        return {
+                            UID: key,
+                            BankAgree: bank.agree || false,
+                            BankName: bank.bank || "-",
+                            BankBranch: bank.branch || "-",
+                            AccountName: bank.name || "-",
+                            AccountNumber: bank.number || "-",
+                            UpdatedAt: bank.updateAt || "-",
+                        };
+                    });
+
+                    console.log("Formatted Bank Data:", formattedData);
+
+                    // สร้างไฟล์ Excel
+                    const workbook = XLSX.utils.book_new();
+                    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Bank");
+
+                    // ดาวน์โหลดไฟล์ Excel
+                    XLSX.writeFile(workbook, "bank.xlsx");
+                });
             }
         },
 
@@ -747,7 +868,6 @@ export default {
 
 
 <style scoped>
-
 .action_manage_carbon {
     display: flex;
     width: 100%;
