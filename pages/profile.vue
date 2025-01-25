@@ -121,8 +121,9 @@
                             </div>
                             <p>{{ treeData.totalCarbon }}C</p>
                         </div>
-                        
-                        <p>กำหนดราคาขาย <input v-model="treeData.carbonPrice" class="input-price" type="number" name="" id=""> บาท</p>
+
+                        <p>กำหนดราคาขาย <input v-model="treeData.carbonPrice" class="input-price" type="number" name=""
+                                id=""> บาท</p>
 
                         <div class="form-carbon-sub">
                             <p>ค่าตอบแทนที่ได้รับ</p>
@@ -166,7 +167,7 @@
                                         <h1>ระบบ</h1>
                                         <p>คุณ อาทิตภูมิ ได้ชื้อคาร์บอนเรียบร้อย</p>
                                     </div>
-        
+
                                 </div>
 
 
@@ -365,7 +366,7 @@ export default {
             }
         },
 
-        
+
 
 
         // ตรวจสอบข้อมูลฟอร์มบัญชีธนาคาร
@@ -505,6 +506,9 @@ export default {
 
         // เพิ่มข้อมูลต้นไม้ใหม่
         addTree() {
+            if (!Array.isArray(this.treeData.trees)) {
+                this.treeData.trees = []; // กำหนดค่าเริ่มต้นให้เป็นอาร์เรย์
+            }
             this.treeData.trees.push({
                 type: "",
                 height: 0,
@@ -512,6 +516,7 @@ export default {
                 count: 0,
             });
         },
+
         // ลบข้อมูลต้นไม้
         removeTree(index) {
             this.treeData.trees.splice(index, 1);
@@ -579,7 +584,7 @@ export default {
             })
         },
 
-        saveCarbonPrice(treeData){
+        saveCarbonPrice(treeData) {
             console.log(treeData);
             firebase.database().ref('trees/' + this.user.uid).update(
                 {
