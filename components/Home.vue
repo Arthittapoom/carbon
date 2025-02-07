@@ -132,34 +132,38 @@ export default {
     methods: {
 
         buyCorbon() {
-            console.log(this.selectedTree);
-            console.log(this.imgurl);
 
-            const playload = {
-                tree: this.selectedTree,
-                imgurl: this.imgurl,
-                uid: firebase.auth().currentUser.uid,
-                status: "รอการตรวจสอบ"
-            }
 
-            // บันทึกข้อมูล
-           const ref = firebase.database().ref('buyCorbon').push(playload);
+            this.router.push('/2c2p')
+            
+        //     console.log(this.selectedTree);
+        //     console.log(this.imgurl);
 
-           ref.then((snapshot) => {
+        //     const playload = {
+        //         tree: this.selectedTree,
+        //         imgurl: this.imgurl,
+        //         uid: firebase.auth().currentUser.uid,
+        //         status: "รอการตรวจสอบ"
+        //     }
+
+        //     // บันทึกข้อมูล
+        //    const ref = firebase.database().ref('buyCorbon').push(playload);
+
+        //    ref.then((snapshot) => {
                
-               // แจ้งเตือน
-               Swal.fire({
-                   icon: 'success',
-                   title: 'บันทึกข้อมูลสําเร็จ',
-                   showConfirmButton: false,
-                   timer: 2000
-               })
+        //        // แจ้งเตือน
+        //        Swal.fire({
+        //            icon: 'success',
+        //            title: 'บันทึกข้อมูลสําเร็จ',
+        //            showConfirmButton: false,
+        //            timer: 2000
+        //        })
 
-           })
+        //    })
 
-           ref.catch((error) => {
-               console.error(error);
-           })
+        //    ref.catch((error) => {
+        //        console.error(error);
+        //    })
         },
 
         onFileChange(event) {
