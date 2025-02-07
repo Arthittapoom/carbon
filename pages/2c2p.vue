@@ -17,7 +17,7 @@ export default {
         lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
         mode: "subscription", // **ถ้าเป็นรายเดือนต้องใช้ mode: 'subscription'**
         successUrl: "https://carbon-kappa-steel.vercel.app/success",
-        cancelUrl:  "https://carbon-kappa-steel.vercel.app/success",
+        cancelUrl:  "https://carbon-kappa-steel.vercel.app/cancel",
       });
 
       if (error) {

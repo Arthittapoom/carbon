@@ -63,7 +63,7 @@
                     <div v-for="item in treeData" class="card-body2">
                         <p>จำนวนคาร์บอน {{ item.totalCarbon }} C</p>
                         <p>ราคา {{ item.carbonPrice }} บาท</p>
-                        <button @click="buyTree(item)">ชื้อ</button>
+                        <button @click="buyTree(item)">ซื้อ</button>
                     </div>
 
 
@@ -87,7 +87,7 @@
 
                 <div class="btn-corbon">
                     <button @click="page = 1" class="btn btn-primary">กลับ</button>
-                    <button @click="buyCorbon()" class="btn btn-primary">ชื้อ</button>
+                    <button @click="buyCorbon()" class="btn btn-primary">ซื้อ</button>
                 </div>
 
             </div>
