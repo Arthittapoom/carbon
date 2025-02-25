@@ -2,7 +2,13 @@
     <div class="backgroundhome">
       <Nevbar />
       <Home />
+
+
+
+
+
     </div>
+
   </template>
   
   <script>
@@ -24,7 +30,7 @@
   
   <style scoped>
   .backgroundhome {
-    background: linear-gradient(to bottom right, #0BC599 30%, #F1E92E 100%);
+    background: linear-gradient(to bottom right, #AAAD9B 30%, #464838 100%);
     min-height: 100vh;
     height: 100%;
     width: 100%;

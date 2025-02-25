@@ -149,7 +149,7 @@ export default {
 
 .navbar-dark .navbar-nav .nav-link:hover,
 .navbar-dark .navbar-nav .nav-link:focus {
-  color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
 }
 
 .navbar-toggler {
@@ -157,7 +157,7 @@ export default {
 }
 
 .bg-transparent {
-  background-color: #fefef100 !important;
+  background-color: #f6f6f6 !important;
 }
 
 @media (max-width: 575px) {
@@ -175,14 +175,14 @@ export default {
 .btn-secondary:not(:disabled):not(.disabled):active,
 .btn-secondary:not(:disabled):not(.disabled).active,
 .show>.btn-secondary.dropdown-toggle {
-  color: #fff;
+  color: #000000;
   background-color: #0088ff00;
   border-color: #0088ff00;
 }
 
 .btn-secondary:focus,
 .btn-secondary.focus {
-  color: #fff;
+  color: #000000;
   background-color: #0088ff00;
   border-color: #0088ff00;
   box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0);
