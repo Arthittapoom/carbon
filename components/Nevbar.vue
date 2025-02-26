@@ -6,13 +6,13 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
           <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
-          <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage">จัดการร้าน</b-nav-item>
+          <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการร้าน</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')"
-            class="mr-5">แจ้งเตือน</b-nav-item>
+          <!-- <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')"
+            class="mr-5">แจ้งเตือน</b-nav-item> -->
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
@@ -130,7 +130,7 @@ export default {
     },
 
     profile() {
-      this.$router.push('/profile')
+      this.$router.push('/profile-info')
     }
 
   }

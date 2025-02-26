@@ -39,7 +39,7 @@
                                     <div>
                                         <h1>{{ item.firstname + ' ' + item.lastname }}</h1>
                                         <p>{{ item.role === 'user' ? 'ผู้ใช้' : 'ผู้ดูแลระบบ' }}</p>
-                                    </div>
+                                    </div> 
                                     <button @click="edituser(item)">แก้ไข</button>
                                 </div>
 
@@ -211,6 +211,7 @@ import Swal from 'sweetalert2'
 
 export default {
     components: { Nevbar },
+    layout: 'menu',
 
     data() {
         return {
