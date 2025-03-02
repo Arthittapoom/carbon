@@ -1,8 +1,9 @@
 <template>
     <div class="menu-main">
         <div class="menu-left">
+            <button @click="goto('/Standard-T-VER-status-admin')">คำขอรับรองคาร์บอนเครดิต</button>
+            <button @click="goto('/Standard-T-VER-status-admin-approve')">คำขอที่อนุมัติแล้ว</button>
             <button @click="goto('/manage-users')">จัดการผู้ใช้</button>
-            <button @click="goto('/manage-tree')">จัดการคาร์บอน</button>
             <button @click="goto('/manage-report')">สรุปรายงาน</button>
             <button @click="goto('/manage-payment')">จัดการค่าตอบแทน</button>
             <button @click="goto('/')">ย้อนกลับ</button>
@@ -42,10 +43,13 @@
 
 .menu-right {
     width: 80%;
-    height: auto;
+    height: 100vh;
+    overflow-y: scroll;
     background-color: #fff;
     padding: 20px;
 }
+
+
 </style>
 
 <script>

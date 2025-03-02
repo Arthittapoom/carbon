@@ -3,10 +3,6 @@
       <Nevbar />
       <Home />
 
-
-
-
-
     </div>
 
   </template>
@@ -37,5 +33,7 @@
     display: flex;
     flex-direction: column;
   }
+
+  
   </style>
   
