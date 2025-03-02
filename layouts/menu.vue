@@ -26,7 +26,7 @@
     gap: 10px;
     width: 20%;
     height: 100vh;
-    background-color: #3FCFC8;
+    background-color: #3c623e;
     padding: 20px;
     margin-right: 20px;
 }
@@ -36,8 +36,8 @@
     border: none;
     border-radius: 5px;
     text-align: left;
-    background-color: #007b75;
-    color: #fff;
+    background-color: #e3e3e3;
+    color: #053a13;
     cursor: pointer;
 }
 
