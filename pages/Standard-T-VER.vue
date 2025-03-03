@@ -67,33 +67,96 @@
         <!-- รายงานการติดตาม -->
         <div class="form-row-v2">
             <label>รายงานการติดตามประเมินผล (Monitoring Report):</label>
-            <div v-for="(file, index) in form.monitoringFiles" :key="'monitoring-' + index" class="file-upload">
-                <input type="file" @change="handleFileUpload($event, 'monitoringFiles', index)" />
-                <span v-if="file">ไฟล์ที่อัพโหลด: {{ file.name }}</span>
+            <div>
+                <button @click="downloadFile('monitoringFiles')">ดาวน์โหลดตัวอย่าง</button>
             </div>
-            <button @click="addFile('monitoringFiles')">เพิ่มไฟล์</button>
-            <button @click="downloadFile('monitoringFiles')">ดาวน์โหลดตัวอย่าง</button>
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('m1')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('m2')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('m3')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('m4')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
         </div>
 
         <!-- รายงานการตรวจสอบ -->
         <div class="form-row-v2">
             <label>รายงานการตรวจสอบความใช้ได้โครงการ (Verification Report):</label>
-            <div v-for="(file, index) in form.verificationFiles" :key="'verification-' + index" class="file-upload">
-                <input type="file" @change="handleFileUpload($event, 'verificationFiles', index)" />
-                <span v-if="file">ไฟล์ที่อัพโหลด: {{ file.name }}</span>
+            <div>
+                <button @click="downloadFile('verificationFiles')">ดาวน์โหลดตัวอย่าง</button>
             </div>
-            <button @click="addFile('verificationFiles')">เพิ่มไฟล์</button>
-            <button @click="downloadFile('verificationFiles')">ดาวน์โหลดตัวอย่าง</button>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('v1')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('v2')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('v3')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('v4')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
         </div>
 
         <!-- อื่น ๆ -->
         <div class="form-row-v2">
             <label>อื่น ๆ (ถ้ามี):</label>
-            <div v-for="(file, index) in form.otherFiles" :key="'other-' + index" class="file-upload">
-                <input type="file" @change="handleFileUpload($event, 'otherFiles', index)" />
-                <span v-if="file">ไฟล์ที่อัพโหลด: {{ file.name }}</span>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('other1')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
             </div>
-            <button @click="addFile('otherFiles')">เพิ่มไฟล์</button>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('other2')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('other3')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
+            <div class="pt-2">
+                <input type="file" @change="handleFileChange" />
+                <button @click="uploadFile('other4')">Upload</button>
+                <p v-if="uploading">Uploading...</p>
+            </div>
+
         </div>
 
         <div class="form-row-button">
@@ -104,13 +167,14 @@
 </template>
 
 <script>
-import axios from 'axios';
 import firebase from 'firebase/compat/app';
 import Swal from 'sweetalert2';
+
 export default {
     layout: 'menu-profile',
     data() {
         return {
+            uploading: false,
             form: {
                 projectNameEn: '',
                 projectNameTh: '',
@@ -121,9 +185,9 @@ export default {
                 phone: '',
                 fax: '',
                 email: '',
-                monitoringFiles: [],   // รายงานการติดตาม
-                verificationFiles: [], // รายงานการตรวจสอบ
-                otherFiles: [],        // อื่น ๆ
+                monitoringFiles: [],
+                verificationFiles: [],
+                otherFiles: [],
             },
             projectTypes: [
                 'การเพิ่มประสิทธิภาพพลังงาน',
@@ -133,7 +197,6 @@ export default {
                 'การจัดการของเสีย',
                 'การเกษตร',
             ],
-
             uid: '',
         };
     },
@@ -148,29 +211,113 @@ export default {
         });
     },
     methods: {
-        handleFileUpload(event, fileType, index) {
-            const file = event.target.files[0];
-            if (file) {
-                const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png']; // ประเภทไฟล์ที่อนุญาต
-                if (!allowedTypes.includes(file.type)) {
-                    alert('โปรดเลือกไฟล์ PDF หรือภาพ JPEG/PNG เท่านั้น');
+
+        handleFileChange(event) {
+            this.file = event.target.files[0]
+        },
+
+        async fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.onerror = reject
+                reader.readAsDataURL(file)
+            })
+        },
+
+        async uploadFile(fileType) {
+            if (!this.file) return;
+
+            // สร้างตัวแปรที่ใช้เก็บไฟล์ตามประเภท
+            let fileArray;
+            switch (fileType) {
+                case 'm1':
+                case 'm2':
+                case 'm3':
+                case 'm4':
+                    fileArray = this.form.monitoringFiles;
+                    break;
+                case 'v1':
+                case 'v2':
+                case 'v3':
+                case 'v4':
+                    fileArray = this.form.verificationFiles;
+                    break;
+                case 'other1':
+                case 'other2':
+                case 'other3':
+                case 'other4':
+                    fileArray = this.form.otherFiles;
+                    break;
+                default:
+                    console.error('Invalid file type:', fileType);
                     return;
-                }
-                this.form[fileType].splice(index, 1, file);
+            }
+
+            // เพิ่มไฟล์เข้าไปในอาเรย์ที่เหมาะสม
+            fileArray.push(this.file);
+
+            this.uploading = true;
+            try {
+                // แปลงไฟล์เป็น Base64
+                const base64File = await this.fileToBase64(this.file);
+
+                // บันทึกไฟล์ไปยัง Firebase
+                const dbRef = firebase.database().ref('files');
+                const newFileRef = dbRef.push();
+                await newFileRef.set({
+                    fileName: this.file.name,
+                    fileData: base64File,
+                    uploadDate: new Date().toLocaleString()  // เก็บวันที่อัพโหลด
+                });
+
+
+
+                // หลังจากอัพโหลดแล้วให้เก็บ uid ของไฟล์ที่อัพโหลดไว้ใน form
+
+                //แปลง m1 v1 other1 เป็น monitoringFiles1 verificationFiles1 otherFiles1
+
+                const fileTypeMapping = {
+                    'm1': 'monitoringFiles1',
+                    'm2': 'monitoringFiles2',
+                    'm3': 'monitoringFiles3',
+                    'm4': 'monitoringFiles4',
+                    'v1': 'verificationFiles1',
+                    'v2': 'verificationFiles2',
+                    'v3': 'verificationFiles3',
+                    'v4': 'verificationFiles4',
+                    'other1': 'otherFiles1',
+                    'other2': 'otherFiles2',
+                    'other3': 'otherFiles3',
+                    'other4': 'otherFiles4'
+                };
+
+                fileType = fileTypeMapping[fileType] || fileType;
+
+
+
+                this.form[fileType] = newFileRef.key;
+
+
+
+
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            } finally {
+                this.uploading = false;
             }
         },
-        addFile(fileType) {
-            this.form[fileType].push(null);  // เพิ่มช่องไฟล์ใหม่
-        },
+
         downloadFile(fileType) {
             const fileUrls = {
                 monitoringFiles: 'https://ghgreduction.tgo.or.th/th/download-tver/download/8223/333/32.html',
-                verificationFiles: 'https://ghgreduction.tgo.or.th/th/download-tver/download/8224/333/32.html'
+                verificationFiles: 'https://ghgreduction.tgo.or.th/th/download-tver/download/8224/333/32.html',
             };
             if (fileUrls[fileType]) {
                 window.location.href = fileUrls[fileType];
             }
         },
+
         cancelForm() {
             this.form = {
                 projectNameEn: '',
@@ -187,8 +334,8 @@ export default {
                 otherFiles: [],
             };
         },
+
         submitForm() {
-            // ตรวจสอบว่าข้อมูลครบถ้วน
             if (!this.form.projectNameEn || !this.form.projectNameTh || !this.form.contactName || !this.form.email) {
                 alert('กรุณากรอกข้อมูลให้ครบถ้วน');
                 return;
@@ -203,34 +350,31 @@ export default {
                 ...this.form,
                 status: '1',
                 date_submitForm: new Date().toISOString(),
-                uid: this.uid
+                uid: this.uid,
             };
 
-            // ส่งข้อมูลไปยัง Firebase Realtime Database
             firebase.database().ref('T-VER-Form').push(payload).then(() => {
                 Swal.fire({
                     icon: 'success',
-                    title: 'บันทึกข้อมูลสําเร็จ',
+                    title: 'บันทึกข้อมูลสำเร็จ',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
                 });
-
-                // เคลียร์ฟอร์ม
                 this.cancelForm();
-
             }).catch((error) => {
                 console.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล:", error);
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
-                    text: error.message
+                    text: error.message,
                 });
             });
         },
-    }
-
+    },
 };
 </script>
+
+
 
 <style scoped>
 .form-main {

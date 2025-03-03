@@ -5,6 +5,7 @@
 
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
+          <img class="img-logo" src="Group 24.png" alt="">
           <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
           <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการร้าน</b-nav-item>
         </b-navbar-nav>
@@ -186,5 +187,10 @@ export default {
   background-color: #0088ff00;
   border-color: #0088ff00;
   box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0);
+}
+
+.img-logo {
+  width: auto;
+  height: 53px;
 }
 </style>

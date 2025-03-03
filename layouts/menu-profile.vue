@@ -1,18 +1,21 @@
 <template>
-    <div class="menu-main">
-        <div class="menu-left">
-            <button @click="goto('/Standard-T-VER')">แบบฟอร์มขอรับรองคาร์บอนเครดิต</button>
-            <button @click="goto('/Standard-T-VER-status')">สถานะคำขอรับรองคาร์บอนเครดิต</button>
-            <button @click="goto('/profile-credit-order-sell')">รายการเสนอขายคาร์บอนเครดิต</button>
-            <button @click="goto('/profile-credit-order-buy')">รายการเสนอชื้อคาร์บอนเครดิต</button>
-            <button @click="goto('/profile-info')">ข้อมูลส่วนตัว</button>
-            <button @click="goto('/profile-bank')">ข้อมูลบัญชี</button>
-            <button @click="goto('/profile-history')">ประวัติการชื้อขาย</button>
-            <button @click="goto('/')">ย้อนกลับ</button>
-            <button @click="logout">ออกจากระบบ</button>
-        </div>
-        <div class="menu-right">
-            <nuxt />
+    <div>
+        <Nevbar />
+        <div class="menu-main">
+            <div class="menu-left">
+                <button @click="goto('/Standard-T-VER')">แบบฟอร์มขอรับรองคาร์บอนเครดิต</button>
+                <button @click="goto('/Standard-T-VER-status')">สถานะคำขอรับรองคาร์บอนเครดิต</button>
+                <button @click="goto('/profile-credit-order-sell')">รายการเสนอขายคาร์บอนเครดิต</button>
+                <button @click="goto('/profile-credit-order-buy')">รายการเสนอชื้อคาร์บอนเครดิต</button>
+                <button @click="goto('/profile-info')">ข้อมูลส่วนตัว</button>
+                <button @click="goto('/profile-bank')">ข้อมูลบัญชี</button>
+                <button @click="goto('/profile-history')">ประวัติการชื้อขาย</button>
+                <button @click="goto('/')">ย้อนกลับ</button>
+                <button @click="logout">ออกจากระบบ</button>
+            </div>
+            <div class="menu-right">
+                <nuxt />
+            </div>
         </div>
     </div>
 </template>
@@ -28,7 +31,7 @@
     flex-direction: column;
     gap: 10px;
     width: 20%;
-    height: 100vh;
+    height: 90vh;
     background-color: #3c623e;
     padding: 20px;
     margin-right: 20px;
@@ -46,7 +49,7 @@
 
 .menu-right {
     width: 80%;
-    height: 100vh;
+    height: 90vh;
     overflow-y: scroll;
     padding: 20px;
 }
@@ -55,7 +58,9 @@
 <script>
 import Swal from 'sweetalert2'
 import firebase from '~/plugins/firebase.js'
+import Nevbar from '~/components/Nevbar.vue'
 export default {
+    components: { Nevbar },
     methods: {
         goto(path) {
             this.$router.push(path)

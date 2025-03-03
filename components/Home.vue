@@ -2,7 +2,7 @@
    <div>
      <div class="body-main">
         <div class="box-left">
-            <p>สรุปภาพรวมตลาด</p>
+            <p class="title">สรุปภาพรวมตลาด</p>
             <div class="graph-container">
                     <div class="graph-y-title">
                         Y: ค่า Carbon
@@ -24,13 +24,49 @@
                 </div>
         </div>
         <div class="box-right">
-            <h1>ซื้อขายคาร์บอนเครดิตได้อย่างสะดวกสบาย
+            <h1 class="title">ซื้อขายคาร์บอนเครดิตได้อย่างสะดวกสบาย
                 และง่ายดายเชื่อมต่อกับผู้ซื้อขายที่มีความน่าเชื่อถือ</h1>
-                <p>ให้เราเป็นจุดเริ่มต้นของการซื้อขายคาร์บอนเครดิตของคุณ</p>
-                <button>เริ่มสมัครสมาชิก</button>
+                <div class="box-text">
+                    <p>ให้เราเป็นจุดเริ่มต้นของการซื้อขายคาร์บอนเครดิตของคุณ</p>
+                    <button class="button-login">เริ่มสมัครสมาชิก</button>
+                </div>
 
                 <div class="box-table">
-                    
+                    <div class="box-table-row">
+                        <p>ตลาดกลาง</p>
+                        <a>ราคา ต่ำ-สูง</a>
+                    </div>
+
+                    <table class="table">
+                        <tr class="table-header">
+                            <th>ชื่อ</th>
+                            <th>ปริมาณ</th>
+                            <th>ราคา</th>
+                            <th>แอคชั่น</th>
+                        </tr>
+
+                        <tr class="table-row">
+                            <td>นาย สมนึก</td>
+                            <td>16,000.00 C</td>
+                            <td>10,000.00</td>
+                            <td>ขึ้น</td>
+                        </tr>
+
+                        <tr class="table-row">
+                            <td>นาย สมนึก</td>
+                            <td>16,000.00 C</td>
+                            <td>10,000.00</td>
+                            <td>ขึ้น</td>
+                        </tr>
+
+                        <tr class="table-row">
+                            <td>นาย สมนึก</td>
+                            <td>16,000.00 C</td>
+                            <td>10,000.00</td>
+                            <td>ขึ้น</td>
+                        </tr>
+
+                    </table>
                 </div>
         </div>
      </div>
@@ -69,6 +105,41 @@ export default {
      display: flex;
  }
 
+ .box-table-row {
+     display: flex;
+     justify-content: space-between;
+     padding: 20px;
+ }
+
+ .box-text {
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+ }
+
+ .title {
+    font-size: 30px;
+    color: #ffffff;
+    padding-top: 30px;
+ }
+
+ .box-text>p {
+    font-size: 20px;
+    color: #ffffff;
+ }
+
+ .button-login {
+     background-color: #9CC824;
+     color: #ffffff;
+     padding: 10px 20px;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+ }
+
  .box-left {
     padding: 10px;
      width: 50%;
@@ -87,7 +158,7 @@ export default {
 
  .box-table {
      width: 100%;
-     height: 300px;
+     height: 400px;
      margin-top: 10px;
      background-color: #ffffff;
      border-radius: 15px;
@@ -102,7 +173,7 @@ export default {
     height: 400px;
     /* ความสูงของกราฟ */
     /* border-bottom: 1px solid #ccc; */
-    background-color: #00A1B4;
+    background-color: #ffffff;
     border-radius: 15px;
     padding: 10px;
     position: relative;
@@ -121,7 +192,7 @@ export default {
 .graph-line-title p {
     margin: 0;
     font-size: 12px;
-    color: #ffffff;
+    color: #000000;
 }
 
 .graph-bars {
@@ -134,10 +205,10 @@ export default {
 .graph-line {
     width: 30px;
     /* ความกว้างของแต่ละกราฟ */
-    background-color: #ffffff;
+    background-color: #9CC824;
     /* สีของกราฟ */
     text-align: center;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     margin-bottom: 10px;
     font-size: 12px;
     display: flex;
@@ -153,7 +224,7 @@ export default {
     bottom: -20px;
     /* ให้ตัวเลขอยู่ด้านล่างแท่งกราฟ */
     font-size: 12px;
-    color: #ffffff;
+    color: #000000;
 }
 
 .graph-x-title {
