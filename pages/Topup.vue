@@ -85,7 +85,7 @@ export default {
                     const amount = Number(amountuser) - this.amountwithdraw
                     
                     // ถอนเงิน
-                    firebase.database().ref(`users/${this.uid}`).set({
+                    firebase.database().ref(`users/${this.uid}`).update({
                         amount: amount
                     });
 
