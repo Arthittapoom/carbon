@@ -16,7 +16,7 @@
             class="mr-5">แจ้งเตือน</b-nav-item> -->
 
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
-          <b-nav-item v-if="islogin == true">0.0 บาม</b-nav-item>
+          <b-nav-item v-if="islogin == true">0.0 บาท</b-nav-item>
           <b-nav-item v-if="islogin == true" to="/Topup" class="btn-goto-pay">เติมเงิน</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
