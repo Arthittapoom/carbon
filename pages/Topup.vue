@@ -36,9 +36,22 @@ export default {
                 [100, 200, 500],
                 [1000, 2000, 5000],
                 [10000, 20000, 50000]
-            ]
+            ],
+
+            uid: null
         };
     },
+
+    mounted() {
+        firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.uid = user.uid;
+      } else {
+        alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+      }
+    });
+    },
+
     methods: {
         formatNumber(num) {
             return new Intl.NumberFormat('th-TH').format(num);
@@ -47,16 +60,28 @@ export default {
         async makePayment() {
             const stripe = await loadStripe("pk_test_51QGugcDQdoy5otPN53dXFXBzRt7oHOyzEMWW80RSC3lqguudCY1adU4Oo4NLXhdGzF0hlbDOgc6lVEuGHbn6Fwwg00ep3fLpqp"); // ใช้ Publishable Key จาก Stripe Dashboard
 
-            const { error } = await stripe.redirectToCheckout({
-                lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
-                mode: "subscription", // **ถ้าเป็นรายเดือนต้องใช้ mode: 'subscription'**
-                successUrl: "https://carbon-kappa-steel.vercel.app/success",
-                cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel",
-            });
+            //  Realtime Database
 
-            if (error) {
-                console.error("Stripe Error:", error);
-            }
+            firebase.database().ref(`plyment/${this.uid}`).set(
+                { 
+                    balance: this.amount,
+                    uid: this.uid,
+                    status: 0,
+                }
+            );
+
+            this.$router.push('/success?amount=' + this.amount + '&uid=' + this.uid);
+
+            // const { error } = await stripe.redirectToCheckout({
+            //     lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
+            //     mode: "subscription",
+            //     successUrl: "https://carbon-kappa-steel.vercel.app/success?amount=" + this.amount + "&uid=" + this.uid,
+            //     cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel",
+            // });
+
+            // if (error) {
+            //     console.error("Stripe Error:", error);
+            // }
         },
         topup() {
             if (this.amount > 0) {

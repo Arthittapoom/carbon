@@ -16,12 +16,12 @@
             class="mr-5">แจ้งเตือน</b-nav-item> -->
 
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
-          <b-nav-item v-if="islogin == true">0.0 บาท</b-nav-item>
+          <b-nav-item v-if="islogin == true">{{ formatNumber(amount) }} บาท</b-nav-item>
           <b-nav-item v-if="islogin == true" to="/Topup" class="btn-goto-pay">เติมเงิน</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
               <img class="icon-user"
-              src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
+                src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
             </template>
             <b-dropdown-item disabled>{{ userEmail }}</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
@@ -62,7 +62,8 @@ export default {
       islogin: false,
       userEmail: '',
       role: '',
-      noitify: null
+      noitify: null,
+      amount: ''
     }
   },
   mounted() {
@@ -70,6 +71,10 @@ export default {
 
   },
   methods: {
+    formatNumber(num) {
+      return new Intl.NumberFormat('th-TH').format(num);
+    },
+
 
     getbuyCorbon(uid) {
       // ตรวจสอบว่า `this.noitify` ถูกตั้งค่าเริ่มต้นหรือไม่
@@ -105,6 +110,7 @@ export default {
       firebase.database().ref('users/' + uid).on('value', (snapshot) => {
         const data = snapshot.val();
         this.role = data.role
+        this.amount = data.amount
         // console.log(data);
       })
     },
