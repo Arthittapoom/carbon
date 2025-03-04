@@ -18,7 +18,7 @@
 
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <a v-if="islogin == true" @click="goto('/Topup')" class="btn-goto-pay">ฝากเงิน</a>
-          <a v-if="islogin == true" @click="goto('/Topup')"  class="btn-goto-pay">ถอนเงิน</a>
+          <a v-if="islogin == true" @click="goto('/Topup-withdraw')"  class="btn-goto-pay">ถอนเงิน</a>
           <b-nav-item v-if="islogin == true">{{ formatNumber(amount) }} บาท</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>

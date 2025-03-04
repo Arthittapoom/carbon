@@ -15,11 +15,12 @@
                 <div class="card-right">
                     <p class="card-title">รายละเอียด</p>
                     <p class="card-title-text">จำนวนเงิน {{ formatNumber(amount) }} บาท</p>
-                    <button class="card-button" @click="topup" :disabled="amount === 0">เติมเงิน</button>
-                    <p class="card-title">ถอนเงิน</p>
-                    
-                    <input type="text" name="" id="">
-
+                    <button class="card-button" @click="topup">เติมเงิน</button>
+                    <!-- <p class="card-title">ถอนเงิน</p>
+                    <p class="card-title-text">จำนวนเงิน
+                        <input v-model="amountwithdraw" class="card-input" type="number" name="" id="">
+                    </p>
+                    <button class="card-button-withdraw" @click="withdraw">ถอนเงิน</button> -->
                 </div>
             </div>
         </div>
@@ -42,6 +43,8 @@ export default {
                 [10000, 20000, 50000]
             ],
 
+            amountwithdraw: 0,
+
             uid: null
         };
     },
@@ -59,6 +62,44 @@ export default {
     methods: {
         formatNumber(num) {
             return new Intl.NumberFormat('th-TH').format(num);
+        },
+
+        withdraw() {
+            // console.log("ถอนเงิน");
+
+            firebase.database().ref(`users/${this.uid}`).once('value', (snapshot) => {
+                const data = snapshot.val();
+                // console.log(data.amount);
+
+                const amountuser = data.amount
+                console.log(amountuser);
+
+                // เช็คว่ามีเงินเพียงพอไหม
+                if (this.amountwithdraw > Number(amountuser)) {
+                    return Swal.fire({
+                        icon: 'error',
+                        title: 'เงินไม่เพียงพอ',
+                    })
+                } else {
+
+                    const amount = Number(amountuser) - this.amountwithdraw
+                    
+                    // ถอนเงิน
+                    firebase.database().ref(`users/${this.uid}`).set({
+                        amount: amount
+                    });
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'รอดำเนินการ',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+
+            })
+
+
         },
 
         async makePayment() {
@@ -108,6 +149,7 @@ export default {
 
         },
         topup() {
+            console.log("จำนวนเงินที่เลือก:", this.amount);
             if (this.amount > 0) {
                 Swal.fire({
                     title: 'ยืนยันการเติมเงิน',
@@ -118,13 +160,12 @@ export default {
                     cancelButtonText: 'ยกเลิก'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // โค้ดสำหรับเรียก API เติมเงิน
                         this.makePayment();
-                        // Swal.fire('สำเร็จ!', `คุณเติมเงิน ${this.formatNumber(this.amount)} บาทเรียบร้อยแล้ว`, 'success');
                     }
                 });
             }
         }
+
     }
 };
 </script>
@@ -149,6 +190,26 @@ export default {
     display: flex;
     gap: 20px;
 
+
+}
+
+.card-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.card-button-withdraw {
+    background-color: #00A1B4;
+    color: #ffffff;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    margin-left: 50px;
+    cursor: pointer;
 }
 
 .card-left {
