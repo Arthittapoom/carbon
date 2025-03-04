@@ -28,7 +28,7 @@
                 และง่ายดายเชื่อมต่อกับผู้ซื้อขายที่มีความน่าเชื่อถือ</h1>
                 <div class="box-text">
                     <p>ให้เราเป็นจุดเริ่มต้นของการซื้อขายคาร์บอนเครดิตของคุณ</p>
-                    <button class="button-login">เริ่มสมัครสมาชิก</button>
+                    <button @click="register" class="button-login">เริ่มสมัครสมาชิก</button>
                 </div>
 
                 <div class="box-table">
@@ -92,6 +92,9 @@ export default {
     },
     methods: {
 
+        register() {
+            this.$router.push('/singup')
+        }
 
     },
     mounted() {

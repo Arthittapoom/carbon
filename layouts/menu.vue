@@ -27,21 +27,28 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 20%;
+    width: 25%;
     height: 90vh;
-    background-color: #3c623e;
+    background: linear-gradient(to bottom right, rgb(170, 211, 213) 30%, rgb(125, 170, 174) 100%);
     padding: 20px;
     margin-right: 20px;
 }
 
 .menu-left button {
+    font-family: 'Prompt', sans-serif;
     padding: 10px;
     border: none;
     border-radius: 5px;
     text-align: left;
-    background-color: #e3e3e3;
+    background-color: #ffffff;
+    font-weight: bold;
     color: #053a13;
     cursor: pointer;
+}
+
+.menu-left button:hover {
+    background-color: #00A1B4;
+    color: #ffffff;
 }
 
 .menu-right {

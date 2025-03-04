@@ -16,6 +16,10 @@
                     <p class="card-title">รายละเอียด</p>
                     <p class="card-title-text">จำนวนเงิน {{ formatNumber(amount) }} บาท</p>
                     <button class="card-button" @click="topup" :disabled="amount === 0">เติมเงิน</button>
+                    <p class="card-title">ถอนเงิน</p>
+                    
+                    <input type="text" name="" id="">
+
                 </div>
             </div>
         </div>
@@ -44,12 +48,12 @@ export default {
 
     mounted() {
         firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.uid = user.uid;
-      } else {
-        alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
-      }
-    });
+            if (user) {
+                this.uid = user.uid;
+            } else {
+                alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+            }
+        });
     },
 
     methods: {
@@ -63,25 +67,45 @@ export default {
             //  Realtime Database
 
             firebase.database().ref(`plyment/${this.uid}`).set(
-                { 
+                {
                     balance: this.amount,
                     uid: this.uid,
                     status: 0,
                 }
             );
 
-            // this.$router.push('/success?amount=' + this.amount + '&uid=' + this.uid);
-
-            const { error } = await stripe.redirectToCheckout({
-                lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
-                mode: "subscription",
-                successUrl: "https://carbon-kappa-steel.vercel.app/success?amount=" + this.amount + "&uid=" + this.uid,
-                cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel",
+            Swal.fire({
+                title: 'ยืนยันการเติมเงิน',
+                text: `ยืนยันการเติมเงิน ${this.amount} บาท`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ยืนยัน',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.$router.push(`/success?amount=${this.amount}&uid=${this.uid}`);
+                } else if (result.isDismissed) {
+                    this.$router.push(`/cancel?uid=${this.uid}`);
+                }
             });
 
-            if (error) {
-                console.error("Stripe Error:", error);
-            }
+            // this.$router.push('/success?amount=' + this.amount + '&uid=' + this.uid);
+            // this.$router.push('/cancel?uid=' + this.uid);
+
+            // const { error } = await stripe.redirectToCheckout({
+            //     lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
+            //     mode: "subscription",
+            //     successUrl: "https://carbon-kappa-steel.vercel.app/success?amount=" + this.amount + "&uid=" + this.uid,
+            //     cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel?uid=" + this.uid,
+            // });
+
+            // if (error) {
+            //     console.error("Stripe Error:", error);
+            // }
+
+
         },
         topup() {
             if (this.amount > 0) {
@@ -107,7 +131,7 @@ export default {
 
 <style scoped>
 .main {
-    background-color: rgb(158, 195, 198);
+    background: linear-gradient(to bottom right, rgb(170, 211, 213) 30%, rgb(125, 170, 174) 100%);
     width: 100%;
     height: 90vh;
     display: flex;

@@ -8,6 +8,7 @@
           <img class="img-logo" src="Group 24.png" alt="">
           <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
           <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการร้าน</b-nav-item>
+          <b-nav-item v-if="islogin == true"  @click="profile" class="ml-5" >ลงทะเบียนคาร์บอนเครดิต</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -16,8 +17,9 @@
             class="mr-5">แจ้งเตือน</b-nav-item> -->
 
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
+          <a v-if="islogin == true" @click="goto('/Topup')" class="btn-goto-pay">ฝากเงิน</a>
+          <a v-if="islogin == true" @click="goto('/Topup')"  class="btn-goto-pay">ถอนเงิน</a>
           <b-nav-item v-if="islogin == true">{{ formatNumber(amount) }} บาท</b-nav-item>
-          <b-nav-item v-if="islogin == true" to="/Topup" class="btn-goto-pay">เติมเงิน</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
               <img class="icon-user"
@@ -75,6 +77,9 @@ export default {
       return new Intl.NumberFormat('th-TH').format(num);
     },
 
+    goto(path) {
+      this.$router.push(path)
+    },
 
     getbuyCorbon(uid) {
       // ตรวจสอบว่า `this.noitify` ถูกตั้งค่าเริ่มต้นหรือไม่
@@ -149,12 +154,24 @@ export default {
 
 <style scoped>
 .btn-goto-pay {
-  background-color: #bdec3c !important;
-  border-radius: 5px !important;
-  margin-right: 20px !important;
+  background-color: #00A1B4;
+  border-radius: 5px;
+  margin-right: 10px;
   font-weight: bold;
-  /* เงา */
+  color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 100px;
+  cursor: pointer;
+}
+
+.btn-goto-pay:hover {
+ background-color: #00cde4;
 }
 
 .icon-user {
@@ -163,7 +180,7 @@ export default {
 }
 
 .navbar-dark .navbar-nav .nav-link {
-  color: rgb(44, 44, 44);
+  color: #7ea11e;
   font-weight: bold;
   font-size: large;
   font-family: "Prompt", sans-serif;
@@ -171,7 +188,7 @@ export default {
 
 .navbar-dark .navbar-nav .nav-link:hover,
 .navbar-dark .navbar-nav .nav-link:focus {
-  color: rgb(0, 0, 0);
+  color: #9CC824;
   font-weight: bold;
 }
 
@@ -191,8 +208,8 @@ export default {
 
 .btn-secondary {
   color: #fff;
-  background-color: #0088ff00;
-  border-color: #0088ff00;
+  background-color: #0088ff00 !important;
+  border-color: #0088ff00 !important;
 }
 
 .btn-secondary:not(:disabled):not(.disabled):active,
