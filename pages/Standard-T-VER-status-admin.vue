@@ -90,34 +90,39 @@ export default {
       formList: [],
       searchQuery: '',
       sortKey: '',
+      sortOrders: {},
       selectedForm: null,
       uid: ''
     };
   },
   computed: {
     filteredForms() {
-      return this.formList.filter(form =>
+      let sortedForms = [...this.formList].filter(form =>
         form.projectNameTh.includes(this.searchQuery) ||
         form.contactName.includes(this.searchQuery) ||
         form.email.includes(this.searchQuery)
-      ).sort((a, b) => {
-        if (!this.sortKey) return 0;
-        return a[this.sortKey] > b[this.sortKey] ? 1 : -1;
-      });
+      );
+
+      if (this.sortKey) {
+        sortedForms.sort((a, b) => {
+          const order = this.sortOrders[this.sortKey] || 1;
+          return (a[this.sortKey] > b[this.sortKey] ? 1 : -1) * order;
+        });
+      }
+
+      return sortedForms;
     }
   },
   mounted() {
-
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.uid = user.uid;
-        console.log("User Logged In:", this.uid);
       } else {
         alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
       }
     });
 
-    this.fetchData(this.uid);
+    this.fetchData();
   },
   methods: {
 
@@ -156,11 +161,10 @@ export default {
     },
 
 
-    fetchData(uid) {
+    fetchData() {
       firebase.database().ref('T-VER-Form').on('value', snapshot => {
         const data = snapshot.val();
         this.formList = Object.entries(data || {}).map(([id, formData]) => ({ id, ...formData }));
-
       });
     },
 
@@ -172,6 +176,8 @@ export default {
       }
     },
     sortBy(key) {
+      // สลับค่าการเรียง (Ascending/Descending)
+      this.sortOrders[key] = this.sortOrders[key] === 1 ? -1 : 1;
       this.sortKey = key;
     },
     showDetails(form) {

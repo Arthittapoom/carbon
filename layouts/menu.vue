@@ -4,7 +4,7 @@
         <div class="menu-main">
             <div class="menu-left">
                 <button @click="goto('/Standard-T-VER-status-admin')">คำขอรับรองคาร์บอนเครดิต</button>
-                <button @click="goto('/Standard-T-VER-status-admin-approve')">คำขอที่อนุมัติแล้ว</button>
+                <!-- <button @click="goto('/Standard-T-VER-status-admin-approve')">คำขอที่อนุมัติแล้ว</button> -->
                 <button @click="goto('/manage-users')">จัดการผู้ใช้</button>
                 <button @click="goto('/manage-report')">สรุปรายงาน</button>
                 <button @click="goto('/manage-payment')">จัดการค่าตอบแทน</button>

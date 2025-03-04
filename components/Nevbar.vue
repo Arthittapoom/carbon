@@ -14,11 +14,14 @@
         <b-navbar-nav class="ml-auto">
           <!-- <b-nav-item v-if="islogin == true" id="show-btn" @click="$bvModal.show('bv-modal-example')"
             class="mr-5">แจ้งเตือน</b-nav-item> -->
+
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
+          <b-nav-item v-if="islogin == true">0.0 บาม</b-nav-item>
+          <b-nav-item v-if="islogin == true" to="/Topup" class="btn-goto-pay">เติมเงิน</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
               <img class="icon-user"
-                src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
+              src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" alt="">
             </template>
             <b-dropdown-item disabled>{{ userEmail }}</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
@@ -36,14 +39,14 @@
       <div class="d-block text-center">
         <!-- <b-alert show variant="success">ระบบยังไม่มีการแจ้งเตือน</b-alert> -->
         <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="item in noitify" show variant="warning">
-          <p >{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
+          <p>{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
         </b-alert>
 
         <b-alert v-if="item.status === 'ตรวจสอบแล้ว'" v-for="item in noitify" show variant="success">
-          <p >{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
+          <p>{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
           <button class="btn btn-success">โหลดเอกสาร</button>
         </b-alert>
-        
+
       </div>
       <b-button class="mt-3 btn-danger" block @click="$bvModal.hide('bv-modal-example')">ปิด</b-button>
     </b-modal>
@@ -75,11 +78,11 @@ export default {
       }
 
       // ลบข้อมูลใน `this.noitify` ทิ้ง
-      
+
 
       firebase.database().ref('buyCorbon').on('value', (snapshot) => {
         const data = snapshot.val();
-        
+
         this.noitify = [];
 
         // console.log(data);
@@ -139,18 +142,31 @@ export default {
 </script>
 
 <style scoped>
+.btn-goto-pay {
+  background-color: #bdec3c !important;
+  border-radius: 5px !important;
+  margin-right: 20px !important;
+  font-weight: bold;
+  /* เงา */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .icon-user {
   width: 30px;
   height: 30px;
 }
 
 .navbar-dark .navbar-nav .nav-link {
-  color: rgb(0, 0, 0);
+  color: rgb(44, 44, 44);
+  font-weight: bold;
+  font-size: large;
+  font-family: "Prompt", sans-serif;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover,
 .navbar-dark .navbar-nav .nav-link:focus {
   color: rgb(0, 0, 0);
+  font-weight: bold;
 }
 
 .navbar-toggler {
