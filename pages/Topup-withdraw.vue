@@ -90,7 +90,7 @@ export default {
                             return Swal.fire({ icon: 'error', title: 'เงินไม่เพียงพอ' });
                         } else {
                             const amount = Number(amountuser) - this.amountwithdraw;
-                            firebase.database().ref(`users/${this.uid}`).set({ amount: amount });
+                            firebase.database().ref(`users/${this.uid}`).update({ amount: amount });
                             firebase.database().ref(`withdraw/${this.uid}`).push({
                                 amount: this.amountwithdraw,
                                 date: new Date().toLocaleDateString(),
