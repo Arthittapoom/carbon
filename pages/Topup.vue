@@ -70,18 +70,18 @@ export default {
                 }
             );
 
-            this.$router.push('/success?amount=' + this.amount + '&uid=' + this.uid);
+            // this.$router.push('/success?amount=' + this.amount + '&uid=' + this.uid);
 
-            // const { error } = await stripe.redirectToCheckout({
-            //     lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
-            //     mode: "subscription",
-            //     successUrl: "https://carbon-kappa-steel.vercel.app/success?amount=" + this.amount + "&uid=" + this.uid,
-            //     cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel",
-            // });
+            const { error } = await stripe.redirectToCheckout({
+                lineItems: [{ price: "price_1QpijtDQdoy5otPNXNgeQrw9", quantity: 1 }], // ✅ ใช้ Price ID ที่ถูกต้อง
+                mode: "subscription",
+                successUrl: "https://carbon-kappa-steel.vercel.app/success?amount=" + this.amount + "&uid=" + this.uid,
+                cancelUrl: "https://carbon-kappa-steel.vercel.app/cancel",
+            });
 
-            // if (error) {
-            //     console.error("Stripe Error:", error);
-            // }
+            if (error) {
+                console.error("Stripe Error:", error);
+            }
         },
         topup() {
             if (this.amount > 0) {
