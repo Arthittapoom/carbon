@@ -28,8 +28,11 @@
           <td>
             <p>{{ form.status === '1' ? 'รอตรวจสอบ' : 'ยืนยันแล้ว' }}</p>
             <!-- <button v-if="form.status === '1'" @click="approveForm(form)">อนุมัติ</button> -->
-             <input v-if="form.status === '1'" type="file"><hr>
-             <button v-if="form.status === '1'" @click="approveForm(form)">ยืนยัน</button>
+            <input v-if="form.status === '1'" @change="handleFileChange" type="file">
+            <hr>
+            <!-- <pre>{{ form }}</pre> -->
+            <button v-if="form.status === '1' && !form.files" @click="uploadFile(form)">Upload</button>
+            <button v-if="form.status === '1'" @click="approveForm(form)">ยืนยัน</button>
           </td>
           <td>{{ new Date(form.date_submitForm).toLocaleString() }}</td>
           <td>
@@ -37,22 +40,24 @@
           </td>
           <td>
             <!-- <pre>{{ form }}</pre> -->
-            <a v-if="form.monitoringFiles1" class="file-link"
-              @click="showFiles(form.monitoringFiles1)">1 รายงานการติดตามประเมินผล</a>
-            <a v-if="form.monitoringFiles2" class="file-link"
-              @click="showFiles(form.monitoringFiles2)">2 รายงานการติดตามประเมินผล</a>
-            <a v-if="form.monitoringFiles3" class="file-link"
-              @click="showFiles(form.monitoringFiles3)">3 รายงานการติดตามประเมินผล</a>
-            <a v-if="form.monitoringFiles4" class="file-link"
-              @click="showFiles(form.monitoringFiles4)">4 รายงานการติดตามประเมินผล</a><hr>
-            <a v-if="form.verificationFiles1" class="file-link"
-              @click="showFiles(form.verificationFiles1)">1 รายงานการตรวจสอบความใช้ได้โครงการ</a>
-            <a v-if="form.verificationFiles2" class="file-link"
-              @click="showFiles(form.verificationFiles2)">2 รายงานการตรวจสอบความใช้ได้โครงการ</a>
-            <a v-if="form.verificationFiles3" class="file-link"
-              @click="showFiles(form.verificationFiles3)">3 รายงานการตรวจสอบความใช้ได้โครงการ</a>
-            <a v-if="form.verificationFiles4" class="file-link"
-              @click="showFiles(form.verificationFiles4)">4 รายงานการตรวจสอบความใช้ได้โครงการ</a><hr>
+            <a v-if="form.monitoringFiles1" class="file-link" @click="showFiles(form.monitoringFiles1)">1
+              รายงานการติดตามประเมินผล</a>
+            <a v-if="form.monitoringFiles2" class="file-link" @click="showFiles(form.monitoringFiles2)">2
+              รายงานการติดตามประเมินผล</a>
+            <a v-if="form.monitoringFiles3" class="file-link" @click="showFiles(form.monitoringFiles3)">3
+              รายงานการติดตามประเมินผล</a>
+            <a v-if="form.monitoringFiles4" class="file-link" @click="showFiles(form.monitoringFiles4)">4
+              รายงานการติดตามประเมินผล</a>
+            <hr>
+            <a v-if="form.verificationFiles1" class="file-link" @click="showFiles(form.verificationFiles1)">1
+              รายงานการตรวจสอบความใช้ได้โครงการ</a>
+            <a v-if="form.verificationFiles2" class="file-link" @click="showFiles(form.verificationFiles2)">2
+              รายงานการตรวจสอบความใช้ได้โครงการ</a>
+            <a v-if="form.verificationFiles3" class="file-link" @click="showFiles(form.verificationFiles3)">3
+              รายงานการตรวจสอบความใช้ได้โครงการ</a>
+            <a v-if="form.verificationFiles4" class="file-link" @click="showFiles(form.verificationFiles4)">4
+              รายงานการตรวจสอบความใช้ได้โครงการ</a>
+            <hr>
             <a v-if="form.otherFiles1" class="file-link" @click="showFiles(form.otherFiles1)">1 อื่น ๆ</a>
             <a v-if="form.otherFiles2" class="file-link" @click="showFiles(form.otherFiles2)">2 อื่น ๆ</a>
             <a v-if="form.otherFiles3" class="file-link" @click="showFiles(form.otherFiles3)">3 อื่น ๆ</a>
@@ -92,7 +97,9 @@ export default {
       sortKey: '',
       sortOrders: {},
       selectedForm: null,
-      uid: ''
+      uid: '',
+      file: null,
+      uploading: false
     };
   },
   computed: {
@@ -109,7 +116,6 @@ export default {
           return (a[this.sortKey] > b[this.sortKey] ? 1 : -1) * order;
         });
       }
-
       return sortedForms;
     }
   },
@@ -160,6 +166,42 @@ export default {
       });
     },
 
+    handleFileChange(event) {
+      this.file = event.target.files[0]
+    },
+
+    async uploadFile(form) {
+      if (!this.file) return;
+
+      this.uploading = true;
+      try {
+        // แปลงไฟล์เป็น Base64
+        const base64File = await this.fileToBase64(this.file);
+
+        // บันทึกไฟล์ไปยัง Firebase
+        const dbRef = firebase.database().ref('T-VER-Form').child(form.id).child('files');
+        const newFileRef = dbRef.push();
+        await newFileRef.set({
+          fileName: this.file.name,
+          fileData: base64File,
+          uploadDate: new Date().toLocaleString()  // เก็บวันที่อัพโหลด
+        });
+
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      } finally {
+        this.uploading = false;
+      }
+    },
+
+    async fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+    },
 
     fetchData() {
       firebase.database().ref('T-VER-Form').on('value', snapshot => {

@@ -135,7 +135,6 @@
                             <button>ถอน</button>
                             <button @click="saveCarbonPrice(treeData)">บันทึก</button>
                         </div>
-
                     </div>
 
                     <div v-if="tab == 3">
@@ -365,9 +364,6 @@ export default {
                 });
             }
         },
-
-
-
 
         // ตรวจสอบข้อมูลฟอร์มบัญชีธนาคาร
         validateForm_bank() {

@@ -7,7 +7,7 @@
         <b-navbar-nav>
           <img class="img-logo" src="Group 24.png" alt="">
           <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
-          <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการร้าน</b-nav-item>
+          <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการข้อมูล</b-nav-item>
           <b-nav-item v-if="islogin == true"  @click="profile" class="ml-5" >ลงทะเบียนคาร์บอนเครดิต</b-nav-item>
         </b-navbar-nav>
 
