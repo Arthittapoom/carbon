@@ -17,10 +17,13 @@
     "bootstrap-vue": "^2.0.0",
     "chart.js": "^4.4.3",
     "firebase": "^10.8.1",
+    "leaflet": "^1.9.4",
     "mdbvue": "^6.7.4",
     "nuxt": "^2.0.0",
+    "nuxt-leaflet": "^0.0.27",
     "pos": "^0.4.2",
     "sweetalert2": "^11.11.1",
+    "vue2-leaflet": "^2.7.1",
     "xlsx": "^0.18.5"
   }
 }

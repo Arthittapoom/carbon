@@ -241,41 +241,75 @@ export default {
 <style scoped>
 .container {
   width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
 .title {
   text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 .search-input {
   width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .data-table th,
 .data-table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: left;
 }
 
 .data-table th {
-  background-color: #f4f4f4;
+  background-color: #2fa4b1;
+  color: white;
   cursor: pointer;
 }
 
+.data-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
 button {
-  padding: 5px 10px;
+  padding: 8px 12px;
   border: none;
-  background: #007bff;
+  background: #28a745;
   color: white;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #218838;
+}
+
+.file-link {
+  display: block;
+  color: #007bff;
+  text-decoration: none;
+  margin-bottom: 5px;
+}
+
+.file-link:hover {
+  text-decoration: underline;
 }
 
 .modal {
@@ -294,6 +328,7 @@ button {
   width: 50%;
   background: white;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 </style>

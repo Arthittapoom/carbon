@@ -32,7 +32,7 @@
                         <div v-else>-</div>
                     </td>
                     <td>
-                        <button class="confirm-btn">ยืนยัน</button>
+                        <button @click="confirmWithdraw(row.key)" class="confirm-btn">ยืนยัน</button>
                     </td>
                 </tr>
             </tbody>
@@ -74,6 +74,11 @@ export default {
     methods: {
         formatNumber(num) {
             return new Intl.NumberFormat('th-TH').format(num);
+        },
+
+        confirmWithdraw(id) {
+            // console.log(id);   
+            firebase.database().ref(`withdraw/${this.uid}/${id}`).update({ status: 1 });  
         },
         fetchwithdraw() {
             firebase.database().ref(`withdraw/${this.uid}`).on('value', async (snapshot) => {

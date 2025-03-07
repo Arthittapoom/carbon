@@ -8,11 +8,11 @@
           <input v-model="password" class="signup-input mb-3 pl-4" placeholder="รหัสผ่าน" type="password">
           <button @click="signin" class="signup-btn mb-3">เข้าสู่ระบบ</button>
           <div class="text-center">
-            <p>หรือ</p>
+            <!-- <p>หรือ</p>
             <button @click="signUpWithGoogle" class="signup-google-btn">
               <img src="https://th.bing.com/th/id/OIP.D6P-BO32wCApcPIIjt6p5wAAAA?rs=1&pid=ImgDetMain" alt="Google Logo">
               เข้าสู่ระบบ ด้วย Google
-            </button>
+            </button> -->
             <div style="text-align: start;">
               <p class="mt-3">ยังไม่มีบัญชี? <nuxt-link to="/singup">สมัครสมาชิก</nuxt-link></p>
               <p>ลืมรหัสผ่าน? <a class="forgot-password" @click="forgotPassword">คลิก</a></p>

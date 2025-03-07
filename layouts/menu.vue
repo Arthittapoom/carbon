@@ -7,7 +7,7 @@
                 <!-- <button @click="goto('/Standard-T-VER-status-admin-approve')">คำขอที่อนุมัติแล้ว</button> -->
                 <button @click="goto('/manage-payment')">ราการคำขอถอนเงิน</button>
                 <button @click="goto('/manage-users')">จัดการผู้ใช้</button>
-                <button @click="goto('/manage-report')">สรุปรายงาน</button>
+                <!-- <button @click="goto('/manage-report')">สรุปรายงาน</button> -->
                 <button @click="goto('/')">ย้อนกลับ</button>
             </div>
             <div class="menu-right">

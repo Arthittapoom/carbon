@@ -44,6 +44,19 @@
             <input type="text" v-model="form.address" id="address" />
         </div>
 
+        <!-- แมพ ปักหมุด -->
+        <div id="map" style="height: 500px;">
+            <client-only>
+                <l-map :zoom="zoom" :center="center" @click="onMapClick">
+                    <l-tile-layer :url="tileLayerUrl" :attribution="tileLayerAttribution"></l-tile-layer>
+                    <l-marker v-for="(position, index) in markerPositions" :key="index" :lat-lng="position"></l-marker>
+                </l-map>
+            </client-only>
+        </div>
+        <div>
+            <p>ตำแหน่งที่คลิก: {{ markerPosition }}</p>
+        </div>
+
         <!-- โทรศัพท์ -->
         <div class="form-row">
             <label for="phone">โทรศัพท์ :</label>
@@ -166,6 +179,81 @@
     </div>
 </template>
 
+<style scoped>
+.form-main {
+    width: 100%;
+}
+
+.form-row-v2 {
+    padding-top: 10px;
+}
+
+.form-row-v2>button {
+    background-color: #a06500;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+h1 {
+    text-align: center;
+}
+
+.form-row {
+    margin-bottom: 15px;
+}
+
+.form-row label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-row input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.form-row-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.form-row-checkbox p {
+    margin-left: 8px;
+}
+
+.file-upload {
+    margin-top: 8px;
+}
+
+.form-row-button {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background-color: #ccc;
+}
+
+.btn-submit {
+    background-color: #28a745;
+    color: white;
+}
+</style>
+
 <script>
 import firebase from 'firebase/compat/app';
 import Swal from 'sweetalert2';
@@ -174,7 +262,14 @@ export default {
     layout: 'menu-profile',
     data() {
         return {
+            zoom: 13, // ระดับการซูม
+            center: [13.7563, 100.5018], // พิกัดเริ่มต้น (กรุงเทพฯ)
+            tileLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // URL สำหรับพื้นหลังแผนที่
+            tileLayerAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', // Attribution สำหรับ OpenStreetMap
+            markerPosition: [13.7563, 100.5018], // ตำแหน่งของหมุดล่าสุด
+            markerPositions: [[13.7563, 100.5018]], // ตำแหน่งหมุดทั้งหมดที่เก็บไว้
             uploading: false,
+            
             form: {
                 projectNameEn: '',
                 projectNameTh: '',
@@ -188,6 +283,7 @@ export default {
                 monitoringFiles: [],
                 verificationFiles: [],
                 otherFiles: [],
+                markerPosition: [13.7563, 100.5018],
             },
             projectTypes: [
                 'การเพิ่มประสิทธิภาพพลังงาน',
@@ -207,18 +303,32 @@ export default {
                 // console.log("User Logged In:", this.uid);
             } else {
                 Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'กรุณาเข้าสู่ระบบ',
-                confirmButtonText: 'ตกลง',
-                confirmButtonColor: '#007BFF'
-              }).then(() => {
-                this.$router.push('/login');
-              })
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'กรุณาเข้าสู่ระบบ',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#007BFF'
+                }).then(() => {
+                    this.$router.push('/login');
+                })
             }
         });
     },
     methods: {
+
+        onMapClick(event) {
+            // เมื่อคลิกที่แผนที่ จะทำการอัพเดตตำแหน่งของหมุด
+            const latLng = event.latlng;
+
+            // กำหนดให้เก็บตำแหน่งเพียงตำแหน่งเดียว
+            this.markerPosition = [latLng.lat, latLng.lng];
+
+            // ลบหมุดเก่าก่อน (หากมี) และเพิ่มหมุดใหม่
+            this.markerPositions = [this.markerPosition];
+
+            // อัพเดตค่าของตำแหน่งที่เลือก
+            this.form.markerPosition = this.markerPosition;
+        },
 
         handleFileChange(event) {
             this.file = event.target.files[0]
@@ -381,80 +491,3 @@ export default {
     },
 };
 </script>
-
-
-
-<style scoped>
-.form-main {
-    width: 100%;
-}
-
-.form-row-v2 {
-    padding-top: 10px;
-}
-
-.form-row-v2>button {
-    background-color: #a06500;
-    color: #ffffff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-h1 {
-    text-align: center;
-}
-
-.form-row {
-    margin-bottom: 15px;
-}
-
-.form-row label {
-    display: block;
-    font-weight: bold;
-}
-
-.form-row input {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-.form-row-checkbox {
-    display: flex;
-    align-items: center;
-}
-
-.form-row-checkbox p {
-    margin-left: 8px;
-}
-
-.file-upload {
-    margin-top: 8px;
-}
-
-.form-row-button {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.btn-cancel,
-.btn-submit {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.btn-cancel {
-    background-color: #ccc;
-}
-
-.btn-submit {
-    background-color: #28a745;
-    color: white;
-}
-</style>

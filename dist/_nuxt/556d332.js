@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[24],{508:function(n,t,e){"use strict";e.r(t);var l={layout:"menu-profile"},o=e(53),component=Object(o.a)(l,(function(){this._self._c;return this._m(0)}),[function(){var n=this._self._c;return n("div",[n("h1",[this._v("รายการซื้อคาร์บอนเครดิต")])])}],!1,null,null,null);t.default=component.exports}}]);

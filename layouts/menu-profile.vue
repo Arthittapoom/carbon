@@ -6,10 +6,10 @@
                 <button @click="goto('/profile-info')">ข้อมูลส่วนตัว / ข้อมูลบัญชี</button>
                 <button @click="goto('/Standard-T-VER')">แบบฟอร์มขอรับรองคาร์บอนเครดิต</button>
                 <button @click="goto('/Standard-T-VER-status')">สถานะคำขอรับรองคาร์บอนเครดิต</button>
-                <button @click="goto('/profile-credit-order-sell')">รายการเสนอขายคาร์บอนเครดิต</button>
-                <button @click="goto('/profile-credit-order-buy')">รายการเสนอชื้อคาร์บอนเครดิต</button>
+                <!-- <button @click="goto('/profile-credit-order-sell')">รายการเสนอขายคาร์บอนเครดิต</button> -->
+                <button @click="goto('/profile-credit-order-buy')">รายการชื้อคาร์บอนเครดิต</button>
                 <!-- <button @click="goto('/profile-bank')">ข้อมูลบัญชี</button> -->
-                <button @click="goto('/profile-history')">ประวัติการทำรายการ</button>
+                <!-- <button @click="goto('/profile-history')">ประวัติการทำรายการ</button> -->
                 <button @click="goto('/')">ย้อนกลับ</button>
                 <button @click="logout">ออกจากระบบ</button>
             </div>

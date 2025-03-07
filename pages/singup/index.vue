@@ -13,11 +13,11 @@
             <span class="sr-only">Loading...</span>
           </div>
           <div class="text-center">
-            <p>หรือ</p>
+            <!-- <p>หรือ</p>
             <button @click="signUpWithGoogle" class="signup-google-btn">
               <img src="https://th.bing.com/th/id/OIP.D6P-BO32wCApcPIIjt6p5wAAAA?rs=1&pid=ImgDetMain" alt="Google Logo">
               สมัครสมาชิก ด้วย Google
-            </button>
+            </button> -->
           </div>
         </div>
       </transition>
