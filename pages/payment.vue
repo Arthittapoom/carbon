@@ -19,7 +19,7 @@
                     <p><strong>วันที่ส่งฟอร์ม:</strong> {{ new Date(form.date_submitForm).toLocaleString() }}</p>
                     <p><strong>หมายเลขแฟกซ์:</strong> {{ form.fax }}</p>
 
-                    <h4>ไฟล์ที่อัพโหลด</h4>
+                    <h4>ไฟล์รับรอง</h4>
                     <ul>
                         <li v-for="(file, key) in form.files" :key="key">
                             <a :href="file.fileData" target="_blank">{{ file.fileName }}</a> (อัพโหลดเมื่อ: {{ new
@@ -40,8 +40,11 @@
 
                 <div v-if="form" class="card-right">
                     <!-- ข้อมูลเพิ่มเติม หรือ ฟังก์ชันที่ต้องการ -->
+                     
                     <p class="card-title">ชําระเงิน</p>
                     <p class="card-title-text">จํานวนเงิน {{ formatNumber(form.price) }} บาท</p>
+                    <!-- ย้อนกลับ -->
+                    <button class="card-button-back" @click="goBack">ย้อนกลับ</button>
                     <button class="card-button" @click="pay(form.price)">ชําระเงิน</button>
                 </div>
             </div>
@@ -103,6 +106,10 @@ export default {
             return new Intl.NumberFormat('th-TH').format(num);
         },
 
+        goBack() {
+            this.$router.go(-1);   
+        },
+
         pay(amountwithdraw) {
             Swal.fire({
                 icon: 'warning',
@@ -142,7 +149,16 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
+.card-button-back {
+    background-color: #00A1B4;
+    color: #ffffff;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    margin-left: 50px;
+    cursor: pointer;
+}
 .card-body {
     width: 100%;
     height: 80%;
@@ -209,7 +225,7 @@ export default {
 }
 
 .card-button {
-    background-color: #00A1B4;
+    background-color: #00b478;
     color: #ffffff;
     width: 200px;
     height: 50px;

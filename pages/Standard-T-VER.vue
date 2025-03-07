@@ -262,7 +262,7 @@ export default {
     layout: 'menu-profile',
     data() {
         return {
-            zoom: 13, // ระดับการซูม
+            zoom: 6, // ระดับการซูม
             center: [13.7563, 100.5018], // พิกัดเริ่มต้น (กรุงเทพฯ)
             tileLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // URL สำหรับพื้นหลังแผนที่
             tileLayerAttribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', // Attribution สำหรับ OpenStreetMap
