@@ -9,6 +9,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 .title {
   text-align: center;
   font-size: 24px;
@@ -119,6 +120,7 @@ button.close {
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -149,7 +151,16 @@ button.close {
           <td>{{ form.projectTypes.join(', ') }}</td>
           <td>{{ form.contactName }}</td>
           <td>
-            {{ form.status === '1' ? '⏳ รอตรวจสอบ' : form.status === '2' ? '✅ ยืนยันแล้ว' : '💰 เสนอราคาแล้ว' }}
+            {{
+              form.status === '1' ? '⏳ รอตรวจสอบ'
+                : form.status === '2' ? '✅ ยืนยันแล้ว'
+                  : form.status === 3 ? '💰 เสนอราคาแล้ว'
+                    : form.status === 4 ? '💰💵 ขายแล้ว'
+                      : form.status === 5 ? '💵 รับเงินแล้ว'
+                      : '❌ ไม่ผ่านการตรวจสอบ'
+            }}
+
+            <button v-if="form.status === 4" class="sell" @click="receive(form)">💵 รับเงิน</button>
 
             <button v-if="form.status === '2'" class="sell" @click="sell(form)">เสนอขาย</button>
             <button v-if="form.status === '2' || form.status === '3'" class="document"
@@ -231,6 +242,21 @@ export default {
     this.fetchData(this.uid);
   },
   methods: {
+
+    receive(form) {
+        // console.log(form.price);
+
+        firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: 5 });
+
+        // update user balance
+        firebase.database().ref(`users/${this.uid}`).once('value', snapshot => {
+          const userData = snapshot.val();
+          const balance = userData.amount || 0;
+          const newBalance = Number(balance) + Number(form.price);
+          firebase.database().ref(`users/${this.uid}`).update({ amount: newBalance });
+        })
+    },
+
     sell(form) {
 
       //    Swal มีช่องใส่ข้อมูล ราคา
