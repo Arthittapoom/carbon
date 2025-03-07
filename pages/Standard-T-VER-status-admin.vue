@@ -30,6 +30,15 @@
             <!-- <button v-if="form.status === '1'" @click="approveForm(form)">อนุมัติ</button> -->
             <input v-if="form.status === '1'" @change="handleFileChange" type="file">
             <hr>
+
+            <!-- รอแก้ -->
+            <div v-if="form.status === '1'">
+              <p>จำนวน carbon(ตัน) :</p>
+              <input type="number">
+              <p>จำนวนระยะเวลา(ปี) :</p>
+              <input type="number">
+            </div>
+            <hr>
             <!-- <pre>{{ form }}</pre> -->
             <button v-if="form.status === '1' && !form.files" @click="uploadFile(form)">Upload</button>
             <button v-if="form.status === '1'" @click="approveForm(form)">ยืนยัน</button>
@@ -126,14 +135,14 @@ export default {
         this.uid = user.uid;
       } else {
         Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'กรุณาเข้าสู่ระบบ',
-                confirmButtonText: 'ตกลง',
-                confirmButtonColor: '#007BFF'
-              }).then(() => {
-                this.$router.push('/login');
-              })
+          icon: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          text: 'กรุณาเข้าสู่ระบบ',
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#007BFF'
+        }).then(() => {
+          this.$router.push('/login');
+        })
       }
     });
 

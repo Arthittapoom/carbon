@@ -9,6 +9,10 @@
                         <input v-model="amountwithdraw" class="card-input" type="number">
                     </p>
                     <button class="card-button-withdraw" @click="withdraw">ถอนเงิน</button>
+
+                    <p class="card-remark">
+                        หมายเหตุ: ก่อนถอนเงินกรุณาตรวจสอบข้อมูลบัญชีให้ถูกต้อง <a href="/profile-info">คลิก</a>
+                    </p>
                 </div>
                 <div class="card-right">
                     <p class="card-title">รายการถอน</p>
@@ -144,6 +148,17 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.card-remark {
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+.card-remark a {
+    text-decoration: none;
+    color: #00A1B4;
+    cursor: pointer;
 }
 
 .card-body {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>ราการคำขอถอนเงิน</h1>
+        <h1>รายการคำขอถอนเงิน</h1>
         <table class="withdraw-table">
             <thead>
                 <tr>

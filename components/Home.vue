@@ -17,7 +17,8 @@
                                     <div>
                                         <p class="popup-title">{{ markerMessages[index].message }}</p>
                                         <!-- ปุ่มภายใน Popup -->
-                                        <button class="popup-button" @click="showDetails(markerMessages[index].form)">สนใจ</button>
+                                        <button class="popup-button"
+                                            @click="showDetails(markerMessages[index].form)">สนใจ</button>
                                     </div>
                                 </l-popup>
                             </l-marker>
@@ -90,6 +91,7 @@
 <script>
 import firebase from '~/plugins/firebase.js'
 import Swal from 'sweetalert2';
+
 export default {
     data() {
         return {
@@ -103,6 +105,8 @@ export default {
                 [13.7563, 100.5018],
                 [15.7563, 100.5018]
             ],
+
+
             // ข้อความที่จะถูกแสดงในแต่ละ Popup
             markerMessages: [
                 'หมุดที่ 1: กรุงเทพฯ',
