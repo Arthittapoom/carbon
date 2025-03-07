@@ -76,7 +76,7 @@ export default {
           timer: 1500
         });
 
-        console.log("เข้าสู่ระบบสำเร็จ", res);
+        // console.log("เข้าสู่ระบบสำเร็จ", res);
 
         this.$router.push('/');
 
@@ -123,7 +123,7 @@ export default {
           showConfirmButton: false,
           timer: 2000
         });
-        console.log("ลิงก์รีเซ็ตรหัสผ่านถูกส่งแล้ว");
+        // console.log("ลิงก์รีเซ็ตรหัสผ่านถูกส่งแล้ว");
       } catch (error) {
         // จัดการข้อผิดพลาดที่เกิดขึ้น
         let errorMessage = "เกิดข้อผิดพลาด: ";

@@ -57,7 +57,15 @@ export default {
                 this.uid = user.uid;
                 this.fetchwithdraw();
             } else {
-                alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+                Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'กรุณาเข้าสู่ระบบ',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#007BFF'
+              }).then(() => {
+                this.$router.push('/login');
+              })
             }
         });
     },

@@ -54,7 +54,15 @@ export default {
             if (user) {
                 this.uid = user.uid;
             } else {
-                alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+                Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'กรุณาเข้าสู่ระบบ',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#007BFF'
+              }).then(() => {
+                this.$router.push('/login');
+              })
             }
         });
     },
@@ -72,7 +80,7 @@ export default {
                 // console.log(data.amount);
 
                 const amountuser = data.amount
-                console.log(amountuser);
+                // console.log(amountuser);
 
                 // เช็คว่ามีเงินเพียงพอไหม
                 if (this.amountwithdraw > Number(amountuser)) {
@@ -149,7 +157,7 @@ export default {
 
         },
         topup() {
-            console.log("จำนวนเงินที่เลือก:", this.amount);
+            // console.log("จำนวนเงินที่เลือก:", this.amount);
             if (this.amount > 0) {
                 Swal.fire({
                     title: 'ยืนยันการเติมเงิน',

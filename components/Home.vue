@@ -116,7 +116,7 @@ export default {
 
  .box-text {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     gap: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -233,7 +233,7 @@ export default {
 .graph-x-title {
     width: 100%;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     margin-bottom: 10px;
     font-weight: bold;
     font-size: 12px;
@@ -243,7 +243,7 @@ export default {
 .graph-y-title {
     width: 100%;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     margin-bottom: 10px;
     font-size: 12px;
     font-weight: bold;

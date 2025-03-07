@@ -259,7 +259,7 @@ export default {
                 this.getbuyCorbon();
                 this.gettrees();
             } else {
-                console.log("User is logged out");
+                // console.log("User is logged out");
             }
         });
     },
@@ -611,7 +611,7 @@ export default {
                         };
                     });
 
-                    console.log("Formatted Bank Data:", formattedData);
+                    // console.log("Formatted Bank Data:", formattedData);
 
                     // สร้างไฟล์ Excel
                     const workbook = XLSX.utils.book_new();
@@ -836,7 +836,7 @@ export default {
                     this.FormData2 = data;
                     this.originalData2 = { ...data };
                 } else {
-                    console.log("No bank data available");
+                    // console.log("No bank data available");
                 }
 
             } catch (error) {
@@ -856,7 +856,7 @@ export default {
                     this.FormData = data; // กำหนดข้อมูลที่ดึงมา
                     this.originalData = { ...data }; // เก็บข้อมูลต้นฉบับ
                 } else {
-                    console.log("No data available");
+                    // console.log("No data available");
                 }
 
             } catch (error) {

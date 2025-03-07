@@ -115,7 +115,7 @@ h1 {
 }
 .button-group {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     gap: 10px;
     margin-top: 20px;
 }

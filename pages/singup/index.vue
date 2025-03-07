@@ -85,10 +85,10 @@ export default {
             showConfirmButton: false,
             timer: 1500
           });
-          console.log("อีเมลยืนยันตัวตนถูกส่งเรียบร้อย");
+          // console.log("อีเมลยืนยันตัวตนถูกส่งเรียบร้อย");
         }
 
-        console.log("ลงทะเบียนสำเร็จ", res);
+        // console.log("ลงทะเบียนสำเร็จ", res);
 
         this.$router.push('/');
 

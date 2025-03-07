@@ -74,7 +74,6 @@ export default {
 
                 this.getUserData(); // ดึงข้อมูลผู้ใช้เมื่อเข้าสู่ระบบ
                 this.getData_bank();
-                this.gettrees(user.uid);
 
             } else {
                 console.log("User is logged out");
@@ -337,7 +336,7 @@ export default {
 
 .profile-info {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
     gap: 50px;
 }

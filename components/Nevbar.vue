@@ -8,7 +8,7 @@
           <img class="img-logo" src="Group 24.png" alt="">
           <b-nav-item class="ml-5" to="/">หน้าแรก</b-nav-item>
           <b-nav-item v-if="role == 'admin'" class="ml-5" to="/manage-users">จัดการข้อมูล</b-nav-item>
-          <b-nav-item v-if="islogin == true"  @click="profile" class="ml-5" >ลงทะเบียนคาร์บอนเครดิต</b-nav-item>
+          <b-nav-item v-if="islogin == true" @click="profile" class="ml-5">ลงทะเบียนคาร์บอนเครดิต</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
@@ -18,7 +18,7 @@
 
           <b-nav-item v-if="islogin == false" class="mr-5" href="/login">เข้าสู่ระบบ</b-nav-item>
           <a v-if="islogin == true" @click="goto('/Topup')" class="btn-goto-pay">ฝากเงิน</a>
-          <a v-if="islogin == true" @click="goto('/Topup-withdraw')"  class="btn-goto-pay">ถอนเงิน</a>
+          <a v-if="islogin == true" @click="goto('/Topup-withdraw')" class="btn-goto-pay">ถอนเงิน</a>
           <b-nav-item v-if="islogin == true">{{ formatNumber(amount) }} บาท</b-nav-item>
           <b-dropdown v-if="islogin == true" right class="mr-5">
             <template #button-content>
@@ -40,11 +40,13 @@
       </template>
       <div class="d-block text-center">
         <!-- <b-alert show variant="success">ระบบยังไม่มีการแจ้งเตือน</b-alert> -->
-        <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="item in noitify" show variant="warning">
+        <b-alert v-if="item.status === 'รอการตรวจสอบ'" v-for="(item, index) in noitify" :key="index" show
+          variant="warning">
           <p>{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
         </b-alert>
 
-        <b-alert v-if="item.status === 'ตรวจสอบแล้ว'" v-for="item in noitify" show variant="success">
+        <b-alert v-if="item.status === 'ตรวจสอบแล้ว'" v-for="(item, index) in noitify" :key="index" show
+          variant="success">
           <p>{{ item.status }} {{ item.tree.totalCarbon }} C {{ item.tree.carbonPrice }} บาท</p>
           <button class="btn btn-success">โหลดเอกสาร</button>
         </b-alert>
@@ -171,7 +173,7 @@ export default {
 }
 
 .btn-goto-pay:hover {
- background-color: #00cde4;
+  background-color: #00cde4;
 }
 
 .icon-user {

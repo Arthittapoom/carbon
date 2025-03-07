@@ -88,6 +88,7 @@
 
 <script>
 import firebase from '~/plugins/firebase.js';
+import Swal from 'sweetalert2';
 export default {
   layout: 'menu',
   data() {
@@ -124,7 +125,15 @@ export default {
       if (user) {
         this.uid = user.uid;
       } else {
-        alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+        Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'กรุณาเข้าสู่ระบบ',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#007BFF'
+              }).then(() => {
+                this.$router.push('/login');
+              })
       }
     });
 
@@ -145,7 +154,7 @@ export default {
           return;
         }
 
-        console.log("File Data:", data);
+        // console.log("File Data:", data);
 
         // Convert Base64 to Blob and trigger download
         const byteCharacters = atob(data.fileData.split(',')[1]);

@@ -204,9 +204,17 @@ export default {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 this.uid = user.uid;
-                console.log("User Logged In:", this.uid);
+                // console.log("User Logged In:", this.uid);
             } else {
-                alert("กรุณาเข้าสู่ระบบก่อนส่งข้อมูล");
+                Swal.fire({
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'กรุณาเข้าสู่ระบบ',
+                confirmButtonText: 'ตกลง',
+                confirmButtonColor: '#007BFF'
+              }).then(() => {
+                this.$router.push('/login');
+              })
             }
         });
     },
