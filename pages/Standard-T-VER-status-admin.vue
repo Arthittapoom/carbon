@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">สถานะคำขอรับรองคาร์บอนเครดิต</h1>
+    <h1 class="title">รายการคำขอรับรองคาร์บอนเครดิต</h1>
 
     <input v-model="searchQuery" class="search-input" placeholder="ค้นหาโครงการ..." />
 

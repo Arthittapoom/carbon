@@ -3,9 +3,9 @@
         <Nevbar />
         <div class="menu-main">
             <div class="menu-left">
-                <button @click="goto('/Standard-T-VER-status-admin')">ราการคำขอรับรองคาร์บอนเครดิต</button>
+                <button @click="goto('/Standard-T-VER-status-admin')">รายการคำขอรับรองคาร์บอนเครดิต</button>
                 <!-- <button @click="goto('/Standard-T-VER-status-admin-approve')">คำขอที่อนุมัติแล้ว</button> -->
-                <button @click="goto('/manage-payment')">ราการคำขอถอนเงิน</button>
+                <button @click="goto('/manage-payment')">รายการคำขอถอนเงิน</button>
                 <button @click="goto('/manage-users')">จัดการผู้ใช้</button>
                 <!-- <button @click="goto('/manage-report')">สรุปรายงาน</button> -->
                 <button @click="goto('/')">ย้อนกลับ</button>
