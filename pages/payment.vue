@@ -130,6 +130,7 @@ export default {
                             firebase.database().ref(`T-VER-Form/${this.formId}/status`).set(4);
                             firebase.database().ref(`T-VER-Form/${this.formId}/payment`).set(this.uid);
                             Swal.fire({ icon: 'success', title: 'ชําระเงินเรียบร้อย', showConfirmButton: false, timer: 1500 });
+                            this.$router.push('/profile-credit-order-buy');
                         }
                     });
                 }

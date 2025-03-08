@@ -231,9 +231,9 @@ export default {
     approveForm(form) {
       if (confirm('คุณต้องการอนุมัติโครงการนี้หรือไม่?')) {
         // Update the status in Firebase
-        console.log(form);
-        // firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: '2' });
-        // alert('อนุมัติโครงการสําเร็จ');
+        // console.log(form);
+        firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: '2' });
+        alert('อนุมัติโครงการสําเร็จ');
       }
     },
     sortBy(key) {
