@@ -71,6 +71,13 @@
                             <th v-if="islogin">แอคชั่น</th>
                         </tr>
 
+                        <tr style="background-color: #D9D9D9;" v-for="(form, index) in formList" :key="index" class="table-row" v-if="success === form.id">
+                            <td>{{ form.contactName }}</td>
+                            <td>{{  formatNumber(form.carbon) }} ตัน</td>
+                            <td>{{  formatNumber(form.price) }} บาท</td>
+                            <td v-if="islogin"><button @click="showDetails(form)" class="btn" disabled>สนใจ</button></td>
+                        </tr>
+
                         <tr v-for="(form, index) in formList" :key="index" class="table-row">
                             <td>{{ form.contactName }}</td>
                             <td>{{  formatNumber(form.carbon) }} ตัน</td>
@@ -127,6 +134,8 @@ export default {
             formList: [],
 
             islogin: false,
+
+            success: null, 
         }
     },
     methods: {
@@ -194,6 +203,8 @@ export default {
     mounted() {
         this.Checkislogin();
         this.fetchData();
+
+        this.success = this.$route.query.success;
     }
 }
 </script>
