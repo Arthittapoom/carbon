@@ -20,7 +20,7 @@
                     <td>
                         <button @click="viewUser(user)">ดูข้อมูล</button>
                         <button @click="editUser(user)">แก้ไข</button>
-                        <button @click="deleteUser(user.id)">ลบ</button>
+                        <!-- <button @click="deleteUser(user.id)">ลบ</button> -->
                         <button @click="viewBank(user)">ดูข้อมูลบัญชี</button>
                     </td>
                 </tr>

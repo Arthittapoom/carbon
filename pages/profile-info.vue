@@ -2,7 +2,7 @@
     <div class="profile-info">
         <div class="form-edit">
             <h1>ข้อมูลส่วนตัว</h1>
-            <h1 class="edit" v-if="!edit">แก้ไข <img class="pencil" @click="edit = !edit" src="../static/pencil2.png" alt=""></h1>
+            <h1 class="edit" @click="edit = !edit" v-if="!edit">แก้ไข <img class="pencil"  src="../static/pencil2.png" alt=""></h1>
             <input :class="{ 'no-border': !edit, 'editable': edit }" :disabled="!edit" v-model="FormData.firstname"
                 type="text" placeholder="ชื่อจริง">
             <input :class="{ 'no-border': !edit, 'editable': edit }" :disabled="!edit" v-model="FormData.lastname"
@@ -20,7 +20,7 @@
         </div>
         <div class="form-edit">
             <h1>ข้อมูลบัญชี</h1>
-            <h1 class="edit" v-if="!editv2">แก้ไข <img class="pencil" @click="editv2 = !editv2" src="../static/pencil2.png" alt="">
+            <h1 @click="editv2 = !editv2" class="edit" v-if="!editv2">แก้ไข <img class="pencil"  src="../static/pencil2.png" alt="">
             </h1>
             <input :class="{ 'no-border': !editv2, 'editable': editv2 }" :disabled="!editv2" v-model="FormData2.bank"
                 type="text" placeholder="ธนาคาร">
