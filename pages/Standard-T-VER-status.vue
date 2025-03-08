@@ -226,6 +226,7 @@ export default {
       if (user) {
         this.uid = user.uid;
         // console.log("User Logged In:", this.uid);
+        this.fetchData(this.uid);
       } else {
         Swal.fire({
           icon: 'error',
@@ -239,7 +240,6 @@ export default {
       }
     });
 
-    this.fetchData(this.uid);
   },
   methods: {
 
@@ -379,10 +379,13 @@ export default {
           ...formData
         }));
 
+
+        console.log(this.formList);
+
         // กรองข้อมูลให้แสดงเฉพาะแบบฟอร์มที่มี uid ตรงกับค่าที่ส่งเข้ามา
-        if (uid) {
-          this.formList = this.formList.filter(form => form.uid === uid);
-        }
+       
+        this.formList = this.formList.filter(form => form.uid === uid);
+    
       });
     },
 

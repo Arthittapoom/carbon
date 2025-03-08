@@ -29,18 +29,18 @@
             <p>{{ form.status === '1' ? 'รอตรวจสอบ' : 'ยืนยันแล้ว' }}</p>
             <!-- <button v-if="form.status === '1'" @click="approveForm(form)">อนุมัติ</button> -->
             <input v-if="form.status === '1'" @change="handleFileChange" type="file">
+            <button class="mt-2" v-if="form.status === '1' && !form.files" @click="uploadFile(form)">Upload</button>
             <hr>
 
             <!-- รอแก้ -->
             <div v-if="form.status === '1'">
               <p>จำนวน carbon(ตัน) :</p>
-              <input type="number">
+              <input v-model="form.carbon" type="number">
               <p>จำนวนระยะเวลา(ปี) :</p>
-              <input type="number">
+              <input v-model="form.year" type="number">
             </div>
             <hr>
             <!-- <pre>{{ form }}</pre> -->
-            <button v-if="form.status === '1' && !form.files" @click="uploadFile(form)">Upload</button>
             <button v-if="form.status === '1'" @click="approveForm(form)">ยืนยัน</button>
           </td>
           <td>{{ new Date(form.date_submitForm).toLocaleString() }}</td>
@@ -231,8 +231,9 @@ export default {
     approveForm(form) {
       if (confirm('คุณต้องการอนุมัติโครงการนี้หรือไม่?')) {
         // Update the status in Firebase
-        firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: '2' });
-        alert('อนุมัติโครงการสําเร็จ');
+        console.log(form);
+        // firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: '2' });
+        // alert('อนุมัติโครงการสําเร็จ');
       }
     },
     sortBy(key) {

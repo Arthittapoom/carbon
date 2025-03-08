@@ -19,7 +19,7 @@
         <div class="form-row-checkbox-group">
             <label>ประเภทโครงการ</label>
             <div class="form-row-checkbox" v-for="(option, index) in projectTypes" :key="index">
-                <input type="checkbox" v-model="form.projectTypes" :value="option" />
+                <input class="form-checkbox" type="checkbox" v-model="form.projectTypes" :value="option" />
                 <p>{{ option }}</p>
             </div>
         </div>
@@ -41,7 +41,7 @@
         <!-- ที่อยู่ -->
         <div class="form-row">
             <label for="address">ที่อยู่ :</label>
-            <input type="text" v-model="form.address" id="address" />
+            <textarea class="form-textarea" v-model="form.address" id="address" rows="4" cols="50"></textarea>
         </div>
 
         <!-- แมพ ปักหมุด -->
@@ -75,35 +75,35 @@
             <input type="email" v-model="form.email" id="email" />
         </div>
 
-        <p>หลักฐานประกอบสำหรับแนบไฟล์</p>
+        <label>หลักฐานประกอบสำหรับแนบไฟล์</label>
 
         <!-- รายงานการติดตาม -->
         <div class="form-row-v2">
             <label>รายงานการติดตามประเมินผล (Monitoring Report):</label>
             <div>
-                <button @click="downloadFile('monitoringFiles')">ดาวน์โหลดตัวอย่าง</button>
+                <button class="btn btn-success" @click="downloadFile('monitoringFiles')">ดาวน์โหลดตัวอย่าง</button>
             </div>
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('m1')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('m1')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('m2')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('m2')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('m3')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('m3')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('m4')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('m4')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
@@ -113,30 +113,30 @@
         <div class="form-row-v2">
             <label>รายงานการตรวจสอบความใช้ได้โครงการ (Verification Report):</label>
             <div>
-                <button @click="downloadFile('verificationFiles')">ดาวน์โหลดตัวอย่าง</button>
+                <button class="btn btn-success" @click="downloadFile('verificationFiles')">ดาวน์โหลดตัวอย่าง</button>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('v1')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('v1')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('v2')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('v2')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('v3')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('v3')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('v4')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('v4')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
@@ -148,25 +148,25 @@
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('other1')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('other1')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('other2')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('other2')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('other3')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('other3')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
             <div class="pt-2">
                 <input type="file" @change="handleFileChange" />
-                <button @click="uploadFile('other4')">Upload</button>
+                <button class="btn btn-warning" @click="uploadFile('other4')">Upload</button>
                 <p v-if="uploading">Uploading...</p>
             </div>
 
@@ -182,6 +182,21 @@
 <style scoped>
 .form-main {
     width: 100%;
+}
+.form-textarea {
+    width: 100%;    
+    height: 100px;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.form-checkbox {
+    margin-top: 10px;    
+    margin-bottom: 10px;
+    width: 20px;
+    height: 20px;
 }
 
 .form-row-v2 {
@@ -222,8 +237,15 @@ h1 {
     align-items: center;
 }
 
+
+.form-row-checkbox-group > label {
+    display: block;
+    font-weight: bold
+}
+
 .form-row-checkbox p {
-    margin-left: 8px;
+    padding-left: 10px;
+    margin: 0;
 }
 
 .file-upload {
