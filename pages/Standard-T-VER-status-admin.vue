@@ -232,7 +232,13 @@ export default {
       if (confirm('คุณต้องการอนุมัติโครงการนี้หรือไม่?')) {
         // Update the status in Firebase
         // console.log(form);
-        firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: '2' });
+        firebase.database().ref(`T-VER-Form/${form.id}`).update(
+          { 
+            status: '2',
+            year: form.year,
+            carbon: form.carbon
+           }
+        );
         alert('อนุมัติโครงการสําเร็จ');
       }
     },

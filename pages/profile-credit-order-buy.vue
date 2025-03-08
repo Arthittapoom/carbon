@@ -5,30 +5,36 @@
         <table v-if="formList.length" class="table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <!-- <th>#</th> -->
                     <th>ชื่อโครงการ (TH)</th>
+                    <th>ปริมาณคาร์บอน (ตัน)</th>
+                    <th>อายุสัญญา (ปี)</th>
                     <!-- <th>ชื่อโครงการ (EN)</th> -->
                     <!-- <th>ที่อยู่</th> -->
                     <!-- <th>ชื่อผู้ติดต่อ</th> -->
                     <!-- <th>อีเมล</th> -->
-                    <th>เบอร์โทร</th>
-                    <th>ประเภทโครงการ</th>
-                    <th>ราคา</th>
+                    <!-- <th>เบอร์โทร</th> -->
+                    <!-- <th>ประเภทโครงการ</th> -->
+                    <th>ราคา (บาท)</th>
                     <th>สถานะ</th>
                     <th>ไฟล์แนบ</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(form, index) in formList" :key="form.id">
-                    <td>{{ index + 1 }}</td>
-                    <td>{{ form.projectNameTh }}</td>
+                    <!-- <td>{{ index + 1 }}</td> -->
+                    <!-- <td>{{ form.projectNameTh }}</td> -->
                     <!-- <td>{{ form.projectNameEn }}</td> -->
                     <!-- <td>{{ form.address }}</td> -->
                     <!-- <td>{{ form.contactName }}</td> -->
                     <!-- <td>{{ form.email }}</td> -->
-                    <td>{{ form.phone }}</td>
-                    <td>{{ form.projectTypes.join(', ') }}</td>
-                    <td>{{ form.price }} บาท</td>
+                    <!-- <td>{{ form.phone }}</td> -->
+
+                    <td>{{ form.projectNameTh }}</td>
+                    <td>{{ formatNumber(form.carbon) }} ตัน</td>
+                    <td>{{ getCountdown(form.year, form.date_submitForm) }}</td>
+                    <!-- <td>{{ form.projectTypes.join(', ') }}</td> -->
+                    <td>{{ formatNumber(form.price) }} บาท</td>
                     <td>
                         <span v-if="form.status === 4" class="badge bg-success">อนุมัติ</span>
                         <span v-else class="badge bg-warning">รอดำเนินการ</span>
@@ -85,6 +91,54 @@ export default {
     },
 
     methods: {
+
+        formatNumber(num) {
+      // thai
+      return new Intl.NumberFormat('th-TH').format(num);
+    },
+
+        getCountdown(year, startDate) {
+
+            year = parseInt(year);
+
+            // ตรวจสอบค่าของ startDate
+            if (!startDate) {
+                return "ข้อมูลไม่ครบถ้วน";
+            }
+
+            // ใช้ Date.parse() เพื่อแปลงวันที่เป็นมิลลิวินาที
+            const start = new Date(startDate); // แปลงวันที่เป็น Date object
+            const now = new Date(); // วันที่ปัจจุบัน
+
+            // กำหนดวันสิ้นสุดโดยเพิ่มปีที่กำหนด
+            const endDate = new Date(start);
+            endDate.setFullYear(endDate.getFullYear() + year);
+
+            // คำนวณระยะเวลา
+            let diffYear = endDate.getUTCFullYear() - now.getUTCFullYear(); // ใช้ getUTCFullYear เพื่อหลีกเลี่ยงผลกระทบจากเวลาท้องถิ่น
+            let diffMonth = endDate.getUTCMonth() - now.getUTCMonth(); // ใช้ getUTCMonth เพื่อคำนวณเดือนตาม UTC
+            let diffDay = endDate.getUTCDate() - now.getUTCDate(); // ใช้ getUTCDate เพื่อคำนวณวันตาม UTC
+
+            // หากวันที่หรือเดือนเป็นลบ ให้ปรับค่าปีและเดือน
+            if (diffDay < 0) {
+                // คำนวณวันในเดือนที่แล้ว
+                diffMonth--;
+                diffDay += new Date(now.getUTCFullYear(), now.getUTCMonth(), 0).getUTCDate();
+            }
+            if (diffMonth < 0) {
+                // คำนวณปีและเดือน
+                diffYear--;
+                diffMonth += 12;
+            }
+
+            // หากวันหมดเวลาแล้ว ให้แสดง 0 ปี 0 เดือน 0 วัน
+            if (diffYear < 0 || (diffYear === 0 && diffMonth === 0 && diffDay <= 0)) {
+                return "0 ปี 0 เดือน 0 วัน";
+            }
+
+            return `${diffYear} ปี ${diffMonth} เดือน ${diffDay} วัน`;
+        },
+
         fetchData(uid) {
             firebase.database().ref('T-VER-Form').orderByChild('status').equalTo(4).on('value', snapshot => {
                 const data = snapshot.val();

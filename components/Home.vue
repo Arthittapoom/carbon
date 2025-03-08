@@ -65,16 +65,16 @@
 
                     <table class="table">
                         <tr class="table-header">
-                            <th>ชื่อ</th>
-                            <th>ปริมาณ</th>
-                            <th>ราคา</th>
+                            <th>ชื่อผู้ทำโครงการ</th>
+                            <th>ปริมาณคาร์บอน (ตัน)</th>
+                            <th>ราคา (บาท)</th>
                             <th v-if="islogin">แอคชั่น</th>
                         </tr>
 
                         <tr v-for="(form, index) in formList" :key="index" class="table-row">
                             <td>{{ form.contactName }}</td>
-                            <td>16,000.00 C</td>
-                            <td>{{ form.price }}</td>
+                            <td>{{  formatNumber(form.carbon) }} ตัน</td>
+                            <td>{{  formatNumber(form.price) }} บาท</td>
                             <td v-if="islogin"><button @click="showDetails(form)" class="button">สนใจ</button></td>
                         </tr>
 
@@ -135,6 +135,10 @@ export default {
             this.$router.push('/singup')
         },
 
+        formatNumber(num) {
+            return new Intl.NumberFormat('th-TH').format(num);
+        },
+
         fetchData() {
             firebase.database().ref('T-VER-Form').on('value', snapshot => {
                 const data = snapshot.val();
@@ -156,7 +160,7 @@ export default {
                 this.markerMessages = [];
 
                 this.formList.forEach(form => {
-                    const markerMessage = `Price: ${form.price} THB\nProject Name: ${form.projectNameTh} 1.00 C`;
+                    const markerMessage = `ปริมาณคาร์บอน: ${this.formatNumber(form.carbon)} ตัน\nราคา: ${this.formatNumber(form.price)} บาท\nชื่อโครงการ: ${form.projectNameTh} `;
                     this.markerMessages.push({
                         message: markerMessage,
                         form: form,

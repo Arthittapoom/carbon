@@ -501,6 +501,8 @@ export default {
                     timer: 1500,
                 });
                 this.cancelForm();
+
+                this.$router.push('/Standard-T-VER-status');
             }).catch((error) => {
                 console.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล:", error);
                 Swal.fire({

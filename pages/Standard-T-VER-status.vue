@@ -138,18 +138,21 @@ button.close {
       <thead>
         <tr>
           <th @click="sortBy('projectNameTh')">ชื่อโครงการ</th>
-          <th>ประเภทโครงการ</th>
-          <th @click="sortBy('contactName')">ชื่อผู้ประสานงาน</th>
+          <th>จำนวนคาร์บอน (ตัน)</th>
+          <th @click="sortBy('contactName')">อายุสัญญา (ปี)</th>
+          <!-- <th @click="sortBy('date_submitForm')">เวลาส่ง</th> -->
           <th>สถานะ</th>
-          <th @click="sortBy('date_submitForm')">เวลาส่ง</th>
           <th>รายละเอียด</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="form in filteredForms" :key="form.id">
           <td>{{ form.projectNameTh }}</td>
-          <td>{{ form.projectTypes.join(', ') }}</td>
-          <td>{{ form.contactName }}</td>
+          <td>{{ formatNumber(form.carbon) }} ตัน</td>
+          <!-- <td>{{ form.year }} ปี เริ่ม {{ new Date(form.date_submitForm).toLocaleString() }}</td>
+            -->
+            <td>{{ getCountdown(form.year, form.date_submitForm) }}</td>
+          <!-- <td>{{ new Date(form.date_submitForm).toLocaleString() }}</td> -->
           <td>
             {{
               form.status === '1' ? '⏳ รอตรวจสอบ'
@@ -162,12 +165,11 @@ button.close {
 
             <button v-if="form.status === 4" class="sell" @click="receive(form)">💵 รับเงิน</button>
 
-            <button v-if="form.status === '2'" class="sell" @click="sell(form)">เสนอขาย</button>
             <button v-if="form.status === '2' || form.status === '3'" class="document"
-              @click="showDocuments(form.files)">📄 ดูเอกสาร</button>
+            @click="showDocuments(form.files)">📄 ดูเอกสาร</button>
+            <button v-if="form.status === '2'" class="sell" @click="sell(form)">เสนอขาย</button>
             <button v-if="form.status === '3'" class="approve" @click="approveOffer(form)">✔️ อนุมัติราคา</button>
           </td>
-          <td>{{ new Date(form.date_submitForm).toLocaleString() }}</td>
           <td>
             <button class="details" @click="showDetails(form)">👁️ ดูรายละเอียด</button>
           </td>
@@ -197,6 +199,7 @@ button.close {
 <script>
 import firebase from '~/plugins/firebase.js';
 import Swal from 'sweetalert2';
+import { formatNumber } from 'chart.js/helpers';
 export default {
   layout: 'menu-profile',
   data() {
@@ -243,6 +246,48 @@ export default {
   },
   methods: {
 
+    getCountdown(year, startDate) {
+
+      year = parseInt(year);
+
+      // ตรวจสอบค่าของ startDate
+      if (!startDate) {
+        return "ข้อมูลไม่ครบถ้วน";
+      }
+
+      // ใช้ Date.parse() เพื่อแปลงวันที่เป็นมิลลิวินาที
+      const start = new Date(startDate); // แปลงวันที่เป็น Date object
+      const now = new Date(); // วันที่ปัจจุบัน
+
+      // กำหนดวันสิ้นสุดโดยเพิ่มปีที่กำหนด
+      const endDate = new Date(start);
+      endDate.setFullYear(endDate.getFullYear() + year);
+
+      // คำนวณระยะเวลา
+      let diffYear = endDate.getUTCFullYear() - now.getUTCFullYear(); // ใช้ getUTCFullYear เพื่อหลีกเลี่ยงผลกระทบจากเวลาท้องถิ่น
+      let diffMonth = endDate.getUTCMonth() - now.getUTCMonth(); // ใช้ getUTCMonth เพื่อคำนวณเดือนตาม UTC
+      let diffDay = endDate.getUTCDate() - now.getUTCDate(); // ใช้ getUTCDate เพื่อคำนวณวันตาม UTC
+
+      // หากวันที่หรือเดือนเป็นลบ ให้ปรับค่าปีและเดือน
+      if (diffDay < 0) {
+        // คำนวณวันในเดือนที่แล้ว
+        diffMonth--;
+        diffDay += new Date(now.getUTCFullYear(), now.getUTCMonth(), 0).getUTCDate();
+      }
+      if (diffMonth < 0) {
+        // คำนวณปีและเดือน
+        diffYear--;
+        diffMonth += 12;
+      }
+
+      // หากวันหมดเวลาแล้ว ให้แสดง 0 ปี 0 เดือน 0 วัน
+      if (diffYear < 0 || (diffYear === 0 && diffMonth === 0 && diffDay <= 0)) {
+        return "0 ปี 0 เดือน 0 วัน";
+      }
+
+      return `${diffYear} ปี ${diffMonth} เดือน ${diffDay} วัน`;
+    },
+
     receive(form) {
         // console.log(form.price);
 
@@ -255,6 +300,11 @@ export default {
           const newBalance = Number(balance) + Number(form.price);
           firebase.database().ref(`users/${this.uid}`).update({ amount: newBalance });
         })
+    },
+
+    formatNumber(num) {
+      // thai
+      return new Intl.NumberFormat('th-TH').format(num);
     },
 
     sell(form) {
@@ -380,7 +430,7 @@ export default {
         }));
 
 
-        console.log(this.formList);
+        // console.log(this.formList);
 
         // กรองข้อมูลให้แสดงเฉพาะแบบฟอร์มที่มี uid ตรงกับค่าที่ส่งเข้ามา
        
