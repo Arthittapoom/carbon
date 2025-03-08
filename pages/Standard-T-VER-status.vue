@@ -333,6 +333,9 @@ export default {
           // console.log(form.id);
 
           firebase.database().ref(`T-VER-Form/${form.id}`).update({ status: 3, price: result.value.price });
+
+          // goto 
+          this.$router.push('/' , { query: { formId: form.id }});
         }
       })
 
