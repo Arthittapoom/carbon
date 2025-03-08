@@ -71,17 +71,28 @@
                             <th v-if="islogin">แอคชั่น</th>
                         </tr>
 
-                        <tr style="background-color: #D9D9D9;" v-for="(form, index) in formList" :key="index" class="table-row" v-if="success === form.id">
+                        <tr style="background-color: #D9D9D9;" v-for="(form, index) in formList" :key="index"
+                            class="table-row" v-if="success === form.id">
                             <td>{{ form.contactName }}</td>
-                            <td>{{  formatNumber(form.carbon) }} ตัน</td>
-                            <td>{{  formatNumber(form.price) }} บาท</td>
-                            <td v-if="islogin"><button @click="showDetails(form)" class="btn" disabled>สนใจ</button></td>
+                            <td>{{ formatNumber(form.carbon) }} ตัน</td>
+                            <td>{{ formatNumber(form.price) }} บาท</td>
+                            <td v-if="islogin"><button @click="showDetails(form)" class="btn" disabled>ลงล่าสุด</button>
+                            </td>
                         </tr>
 
-                        <tr v-for="(form, index) in formList" :key="index" class="table-row">
+                        <tr style="background-color: #D9D9D9;" v-for="(form, index) in formList" :key="index"
+                            class="table-row" v-if="uid === form.uid">
                             <td>{{ form.contactName }}</td>
-                            <td>{{  formatNumber(form.carbon) }} ตัน</td>
-                            <td>{{  formatNumber(form.price) }} บาท</td>
+                            <td>{{ formatNumber(form.carbon) }} ตัน</td>
+                            <td>{{ formatNumber(form.price) }} บาท</td>
+                            <td v-if="islogin"><button @click="showDetails(form)" class="btn" disabled>ของฉัน</button>
+                            </td>
+                        </tr>
+
+                        <tr v-for="(form, index) in formList" :key="index" v-if="uid !== form.uid" class="table-row">
+                            <td>{{ form.contactName }}</td>
+                            <td>{{ formatNumber(form.carbon) }} ตัน</td>
+                            <td>{{ formatNumber(form.price) }} บาท</td>
                             <td v-if="islogin"><button @click="showDetails(form)" class="button">สนใจ</button></td>
                         </tr>
 
@@ -98,6 +109,7 @@
 <script>
 import firebase from '~/plugins/firebase.js'
 import Swal from 'sweetalert2';
+import { uid } from 'chart.js/helpers';
 
 export default {
     data() {
@@ -135,7 +147,9 @@ export default {
 
             islogin: false,
 
-            success: null, 
+            success: null,
+
+            uid: '',
         }
     },
     methods: {
@@ -201,10 +215,28 @@ export default {
 
     },
     mounted() {
-        this.Checkislogin();
-        this.fetchData();
 
-        this.success = this.$route.query.success;
+
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                this.uid = user.uid;
+
+                this.Checkislogin();
+                this.fetchData();
+
+                this.success = this.$route.query.success;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'กรุณาเข้าสู่ระบบ',
+                    confirmButtonText: 'ตกลง',
+                    confirmButtonColor: '#007BFF'
+                }).then(() => {
+                    this.$router.push('/login');
+                })
+            }
+        });
     }
 }
 </script>
@@ -235,6 +267,7 @@ export default {
 
 .body-main {
     display: flex;
+    height: 90vh;
 }
 
 .box-table-row {
@@ -275,14 +308,14 @@ export default {
 .box-left {
     padding: 10px;
     width: 50%;
-    height: 500px;
+    height: auto;
     border-radius: 15px;
     /* background-color: aquamarine; */
 }
 
 .box-right {
     width: 50%;
-    height: 500px;
+    height: auto;
     padding: 10px;
     /* background-color: blue; */
 }

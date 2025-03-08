@@ -16,7 +16,7 @@
                     <!-- <th>เบอร์โทร</th> -->
                     <!-- <th>ประเภทโครงการ</th> -->
                     <th>ราคา (บาท)</th>
-                    <th>สถานะ</th>
+                    <!-- <th>สถานะ</th> -->
                     <th>ไฟล์แนบ</th>
                 </tr>
             </thead>
@@ -35,10 +35,10 @@
                     <td>{{ getCountdown(form.year, form.date_submitForm) }}</td>
                     <!-- <td>{{ form.projectTypes.join(', ') }}</td> -->
                     <td>{{ formatNumber(form.price) }} บาท</td>
-                    <td>
+                    <!-- <td>
                         <span v-if="form.status === 4" class="badge bg-success">อนุมัติ</span>
                         <span v-else class="badge bg-warning">รอดำเนินการ</span>
-                    </td>
+                    </td> -->
                     <td>
                         <button v-if="form.files" class="btn btn-primary btn-sm" @click="showDocuments(form.files)">
                             ดาวน์โหลด
