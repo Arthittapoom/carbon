@@ -76,10 +76,36 @@ export default {
             return new Intl.NumberFormat('th-TH').format(num);
         },
 
-        confirmWithdraw(id) {
-            // console.log(id);   
-            firebase.database().ref(`withdraw/${this.uid}/${id}`).update({ status: 1 });
+        async confirmWithdraw(id) {
+            try {
+                const snapshot = await firebase.database().ref(`withdraw`).once('value');
+                const withdrawData = snapshot.val();
+
+                if (!withdrawData) {
+                    console.warn("ไม่มีข้อมูล withdraw");
+                    return;
+                }
+
+                // วนลูปทุก uid แล้วหา id ที่ตรงกัน
+                const updates = {};
+                Object.entries(withdrawData).forEach(([uid, withdraws]) => {
+                    if (withdraws[id]) {
+                        updates[`withdraw/${uid}/${id}/status`] = 1;
+                    }
+                });
+
+                // อัปเดต status เป็น 1 สำหรับทุก uid ที่มี id ตรงกัน
+                if (Object.keys(updates).length > 0) {
+                    await firebase.database().ref().update(updates);
+                    console.log("อัปเดตสถานะสำเร็จ");
+                } else {
+                    console.warn("ไม่พบรายการที่ต้องอัปเดต");
+                }
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการอัปเดต:", error);
+            }
         },
+
         async fetchwithdraw() {
             try {
                 const withdrawRef = firebase.database().ref(`withdraw`);
