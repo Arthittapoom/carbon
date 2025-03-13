@@ -82,46 +82,51 @@ export default {
         },
         async fetchwithdraw() {
             try {
-                const snapshot = await firebase.database().ref(`withdraw`).once('value');
-                const data = snapshot.val();
+                const withdrawRef = firebase.database().ref(`withdraw`);
 
-                if (data) {
-                    // รวมข้อมูล withdraw ทุก uid เป็น array
-                    this.formList = Object.entries(data).flatMap(([uid, withdraws]) =>
-                        Object.entries(withdraws).map(([key, value]) => ({
-                            ...value,
-                            key,  // เก็บ key ของรายการถอน
-                            uid,  // เก็บ uid ของเจ้าของรายการถอน
-                            userData: null, // เพิ่มข้อมูล user ไว้
-                        }))
-                    );
+                // ตั้งค่า listener
+                withdrawRef.on('value', async (snapshot) => {
+                    const data = snapshot.val();
 
-                    // ดึงข้อมูล users ของแต่ละ uid
-                    const uniqueUids = [...new Set(this.formList.map(item => item.uid))]; // ดึง uid ที่ไม่ซ้ำกัน
-                    const userPromises = uniqueUids.map(async (uid) => {
-                        const userSnapshot = await firebase.database().ref(`users/${uid}`).once('value');
-                        return { uid, userData: userSnapshot.val() };
-                    });
+                    if (data) {
+                        this.formList = Object.entries(data).flatMap(([uid, withdraws]) =>
+                            Object.entries(withdraws).map(([key, value]) => ({
+                                ...value,
+                                key,  // เก็บ key ของรายการถอน
+                                uid,  // เก็บ uid ของเจ้าของรายการถอน
+                                userData: null, // เพิ่มข้อมูล user ไว้
+                            }))
+                        );
 
-                    const userResults = await Promise.all(userPromises);
-
-                    // อัปเดตข้อมูล userData ใน formList
-                    userResults.forEach(({ uid, userData }) => {
-                        this.formList.forEach(item => {
-                            if (item.uid === uid) {
-                                this.$set(item, 'userData', userData);
-                            }
+                        // ดึงข้อมูล users ของแต่ละ uid
+                        const uniqueUids = [...new Set(this.formList.map(item => item.uid))]; // ดึง uid ที่ไม่ซ้ำกัน
+                        const userPromises = uniqueUids.map(async (uid) => {
+                            const userSnapshot = await firebase.database().ref(`users/${uid}`).once('value');
+                            return { uid, userData: userSnapshot.val() };
                         });
-                    });
-                } else {
-                    this.formList = []; // ถ้าไม่มีข้อมูล ให้เป็น array ว่าง
-                }
+
+                        const userResults = await Promise.all(userPromises);
+
+                        // อัปเดตข้อมูล userData ใน formList
+                        userResults.forEach(({ uid, userData }) => {
+                            this.formList.forEach(item => {
+                                if (item.uid === uid) {
+                                    this.$set(item, 'userData', userData);
+                                }
+                            });
+                        });
+                    } else {
+                        this.formList = []; // ถ้าไม่มีข้อมูล ให้เป็น array ว่าง
+                    }
+                });
+
+                // เก็บ reference ไว้ใช้ยกเลิกการฟังภายหลัง
+                this.withdrawRef = withdrawRef;
+
             } catch (error) {
                 console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
             }
         },
-
-
 
     }
 }
