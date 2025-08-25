@@ -13,6 +13,7 @@
               <img src="https://th.bing.com/th/id/OIP.D6P-BO32wCApcPIIjt6p5wAAAA?rs=1&pid=ImgDetMain" alt="Google Logo">
               เข้าสู่ระบบ ด้วย Google
             </button> -->
+            
             <div style="text-align: start;">
               <p class="mt-3">ยังไม่มีบัญชี? <nuxt-link to="/singup">สมัครสมาชิก</nuxt-link></p>
               <p>ลืมรหัสผ่าน? <a class="forgot-password" @click="forgotPassword">คลิก</a></p>
